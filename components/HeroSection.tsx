@@ -1,149 +1,406 @@
 'use client';
 import Image from 'next/image';
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useSpring,
+  useInView,
+  AnimatePresence,
+} from 'framer-motion';
+import { useRef, useEffect, useState } from 'react';
 
+/* ─────────── data ─────────── */
 const leftDishes = [
-  { src: '/hero1.png', size: 130, top: '8%',  left: '0%',  delay: '0s',   duration: '6s'  },
-  { src: '/hero2.png', size: 110, top: '25%', left: '5%',  delay: '1.5s', duration: '7s'  },
-  { src: '/hero3.png', size: 155, top: '48%', left: '-1%', delay: '0.8s', duration: '8s'  },
-  { src: '/hero4.png', size: 120, top: '68%', left: '7%',  delay: '2s',   duration: '6.5s'},
-  { src: '/hero5.png', size: 100, top: '85%', left: '2%',  delay: '1s',   duration: '7.5s'},
+  { src: '/hero1.png', size: 130, top: '8%',  left: '0%',  floatDelay: 0,   floatDur: 6   },
+  { src: '/hero2.png', size: 110, top: '27%', left: '4%',  floatDelay: 1.5, floatDur: 7   },
+  { src: '/hero3.png', size: 155, top: '50%', left: '-2%', floatDelay: 0.8, floatDur: 8   },
+  { src: '/hero4.png', size: 120, top: '70%', left: '6%',  floatDelay: 2,   floatDur: 6.5 },
+  { src: '/hero5.png', size: 100, top: '86%', left: '2%',  floatDelay: 1,   floatDur: 7.5 },
+];
+const rightDishes = [
+  { src: '/hero3.png', size: 140, top: '6%',  right: '0%',  floatDelay: 0.5, floatDur: 7   },
+  { src: '/hero5.png', size: 115, top: '24%', right: '4%',  floatDelay: 1.8, floatDur: 6   },
+  { src: '/hero1.png', size: 150, top: '47%', right: '-2%', floatDelay: 1.2, floatDur: 8.5 },
+  { src: '/hero7.png', size: 110, top: '67%', right: '5%',  floatDelay: 0.3, floatDur: 7   },
+  { src: '/hero6.png', size: 125, top: '83%', right: '1%',  floatDelay: 2.2, floatDur: 6.5 },
 ];
 
-const rightDishes = [
-  { src: '/hero3.png', size: 140, top: '6%',  right: '0%',  delay: '0.5s', duration: '7s'  },
-  { src: '/hero5.png', size: 115, top: '22%', right: '5%',  delay: '1.8s', duration: '6s'  },
-  { src: '/hero1.png', size: 150, top: '45%', right: '-1%', delay: '1.2s', duration: '8.5s'},
-  { src: '/hero7.png', size: 110, top: '65%', right: '6%',  delay: '0.3s', duration: '7s'  },
-  { src: '/hero6.png', size: 125, top: '82%', right: '1%',  delay: '2.2s', duration: '6.5s'},
-];
-export default function HeroSection() {
+/* ─────────── helpers ─────────── */
+function useSmoothScroll(ref: React.RefObject<HTMLElement | null>, output: [number, number]) {
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
+  const raw = useTransform(scrollYProgress, [0, 1], output);
+  return useSpring(raw, { stiffness: 45, damping: 18, mass: 0.8 });
+}
+
+/* ─────────── word-split reveal ─────────── */
+function SplitReveal({ text, delay = 0, className = '' }: { text: string; delay?: number; className?: string }) {
+  const words = text.split(' ');
   return (
-    <section className="relative w-full overflow-hidden">
+    <span className={className} style={{ display: 'inline' }}>
+      {words.map((word, i) => (
+        <span
+          key={i}
+          style={{
+            display: 'inline-block',
+            overflow: 'hidden',
+            verticalAlign: 'bottom',
+            /* Extra room so Arabic descenders (ي ج ح etc.) are never clipped */
+            paddingBottom: '0.2em',
+            marginBottom: '-0.2em',
+          }}
+        >
+          <motion.span
+            style={{ display: 'inline-block' }}
+            initial={{ y: '115%', opacity: 0 }}
+            animate={{ y: '0%', opacity: 1 }}
+            transition={{
+              delay: delay + i * 0.07,
+              duration: 0.85,
+              ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+            }}
+          >
+            {word}&nbsp;
+          </motion.span>
+        </span>
+      ))}
+    </span>
+  );
+}
+
+/* ─────────── component ─────────── */
+export default function HeroSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const phonesRef  = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const isInView     = useInView(sectionRef, { once: true, amount: 0.15 });
+  const phonesInView = useInView(phonesRef, { once: true, amount: 0.25 });
+
+  /* parallax layers — different speeds create depth */
+  const dishesY    = useSmoothScroll(sectionRef, [0, -160]);
+  const phonesY    = useSmoothScroll(sectionRef, [0, -60]);
+  const contentY   = useSmoothScroll(sectionRef, [0, -30]);
+  const glowScale  = useTransform(
+    useScroll({ target: sectionRef, offset: ['start start', 'end start'] }).scrollYProgress,
+    [0, 0.6], [1, 2.2]
+  );
+
+  /* dish entrance: fan out from center */
+  const dishEnter = (side: 'left' | 'right', i: number) => ({
+    initial: { opacity: 0, scale: 0.4, x: side === 'left' ? -200 : 200, rotate: side === 'left' ? -25 : 25 },
+    animate: isInView
+      ? { opacity: 0.82, scale: 1, x: 0, rotate: 0 }
+      : { opacity: 0, scale: 0.4, x: side === 'left' ? -200 : 200, rotate: side === 'left' ? -25 : 25 },
+    transition: {
+      delay: 0.3 + i * 0.11,
+      duration: 1.3,
+      ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+    },
+  });
+
+  return (
+    <section ref={sectionRef} className="relative w-full overflow-hidden min-h-screen">
 
       <style>{`
         @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          33%       { transform: translateY(-14px) rotate(2deg); }
-          66%       { transform: translateY(7px) rotate(-2deg); }
+          0%,100% { transform: translateY(0px) rotate(0deg) scale(1); }
+          33%      { transform: translateY(-18px) rotate(2.5deg) scale(1.03); }
+          66%      { transform: translateY(9px) rotate(-2deg) scale(0.98); }
         }
-        .dish-float {
+        .dish-shell {
           position: absolute;
           border-radius: 50%;
           overflow: hidden;
-          animation: float ease-in-out infinite;
-          opacity: 0.8;
-          box-shadow: 0 8px 32px rgba(0,0,0,0.45);
-          border: 2px solid rgba(255,255,255,0.08);
           pointer-events: none;
           z-index: 0;
+          box-shadow:
+            0 12px 40px rgba(0,0,0,0.55),
+            0 0 0 1.5px rgba(255,255,255,0.09),
+            inset 0 1px 0 rgba(255,255,255,0.12);
+        }
+        .dish-inner {
+          width: 100%; height: 100%;
+          animation: float ease-in-out infinite;
+        }
+
+        /* shimmer on hero title */
+        @keyframes shimmer {
+          0%   { background-position: -400px 0; }
+          100% { background-position: 400px 0; }
+        }
+
+        /* pulsing ring */
+        @keyframes ring-pulse {
+          0%,100% { transform: scale(1); opacity: 0.6; }
+          50%      { transform: scale(1.18); opacity: 0.2; }
         }
       `}</style>
 
-      {/* صور اليسار */}
-      {leftDishes.map((img, i) => (
+      {/* ── background: radial atmospheric glow ── */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        style={{ scale: glowScale, transformOrigin: 'center 60%' }}
+      >
         <div
-          key={`l-${i}`}
-          className="dish-float"
+          className="absolute rounded-full"
           style={{
-            width: img.size,
-            height: img.size,
-            top: img.top,
-            left: img.left,
-            animationDelay: img.delay,
-            animationDuration: img.duration,
+            width: 700,
+            height: 700,
+            top: '30%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            background: 'radial-gradient(circle, rgba(54,194,117,0.13) 0%, transparent 70%)',
+            filter: 'blur(40px)',
           }}
+        />
+      </motion.div>
+
+      {/* ── floating food images ── */}
+      <motion.div style={{ y: dishesY }} className="absolute inset-0 pointer-events-none">
+        {leftDishes.map((img, i) => (
+          <motion.div
+            key={`l-${i}`}
+            className="dish-shell"
+            style={{ width: img.size, height: img.size, top: img.top, left: img.left }}
+            {...dishEnter('left', i)}
+          >
+            <div className="dish-inner" style={{ animationDelay: `${img.floatDelay}s`, animationDuration: `${img.floatDur}s` }}>
+              <Image src={img.src} alt="" fill className="object-cover" />
+            </div>
+          </motion.div>
+        ))}
+        {rightDishes.map((img, i) => (
+          <motion.div
+            key={`r-${i}`}
+            className="dish-shell"
+            style={{ width: img.size, height: img.size, top: img.top, right: img.right }}
+            {...dishEnter('right', i)}
+          >
+            <div className="dish-inner" style={{ animationDelay: `${img.floatDelay}s`, animationDuration: `${img.floatDur}s` }}>
+              <Image src={img.src} alt="" fill className="object-cover" />
+            </div>
+          </motion.div>
+        ))}
+      </motion.div>
+
+      {/* ── main content ── */}
+      <motion.div
+        ref={contentRef}
+        style={{ y: contentY }}
+        className="relative z-10 max-w-7xl mx-auto flex flex-col items-center text-center px-6 py-24"
+      >
+
+        {/* badge */}
+        <motion.div
+          className="flex items-center gap-3 mb-8"
+          initial={{ opacity: 0, y: 20, filter: 'blur(8px)' }}
+          animate={isInView ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
+          transition={{ delay: 0.1, duration: 0.9, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
         >
-          <Image src={img.src} alt="" fill className="object-cover" />
-        </div>
-      ))}
+          {/* pulsing dot with ring */}
+          <span className="relative flex items-center justify-center w-4 h-4">
+            <span
+              className="absolute rounded-full bg-[#36C275]"
+              style={{ width: 16, height: 16, animation: 'ring-pulse 2.2s ease-in-out infinite' }}
+            />
+            <span className="relative w-3 h-3 rounded-full bg-[#36C275]" />
+          </span>
+          <p className="text-sm tracking-widest uppercase text-gray-400 font-medium">
+            Yammy Dz — Food Discovery App
+          </p>
+        </motion.div>
 
-      {/* صور اليمين */}
-      {rightDishes.map((img, i) => (
-        <div
-          key={`r-${i}`}
-          className="dish-float"
-          style={{
-            width: img.size,
-            height: img.size,
-            top: img.top,
-            right: img.right,
-            animationDelay: img.delay,
-            animationDuration: img.duration,
-          }}
-        >
-          <Image src={img.src} alt="" fill className="object-cover" />
-        </div>
-      ))}
-
-      {/* المحتوى الرئيسي - كاملاً كما كان */}
-      <div className="relative z-10 max-w-7xl mx-auto flex flex-col items-center text-center px-6 py-20">
-
-        <div className="flex items-center gap-2 mb-6">
-          <div className="w-3 h-3 rounded-full bg-[#36C275] shadow-[0_0_12px_#36C275]" />
-          <p className="text-sm text-gray-300">Yammy Dz — Food Discovery App</p>
-        </div>
-
-        <h1 className="text-4xl md:text-6xl font-bold leading-tight max-w-4xl">
-          أفضل المطاعم والطهاة في الجزائر داخل تطبيق واحد
+        {/* headline: word-by-word reveal */}
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-black leading-[1.1] max-w-4xl mb-0" dir="rtl">
+          <SplitReveal
+            text="أفضل المطاعم والطهاة في الجزائر"
+            delay={0.2}
+          />
+          <br />
+          <SplitReveal
+            text="داخل تطبيق واحد"
+            delay={0.65}
+            className="text-[#36C275]"
+          />
         </h1>
 
-        <p className="text-gray-300 text-lg md:text-xl leading-relaxed max-w-2xl mt-6">
-          اكتشف، قيّم، واربح نقاط وهدايا حقيقية مع نظام
-          <span className="text-[#E6B325] font-semibold"> Yammy Stars ⭐</span>
-        </p>
+        {/* subtitle */}
+        <motion.p
+          className="text-gray-400 text-lg md:text-xl leading-relaxed max-w-xl mt-7"
+          initial={{ opacity: 0, y: 24 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 1.05, duration: 0.9, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
+          dir="rtl"
+        >
+          اكتشف، قيّم، واربح نقاط وهدايا حقيقية مع نظام{' '}
+          <motion.span
+            className="text-[#E6B325] font-bold"
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : {}}
+            transition={{ delay: 1.4, duration: 0.6 }}
+          >
+            Yammy Stars ⭐
+          </motion.span>
+        </motion.p>
 
-        <div className="flex flex-wrap items-center justify-center gap-4 mt-8">
-          <button className="bg-[#36C275] hover:brightness-110 transition px-6 py-3 rounded-2xl font-medium shadow-lg shadow-[#36C275]/20">
-            تحميل من Google Play
-          </button>
-          <button className="bg-white text-black hover:bg-gray-200 transition px-6 py-3 rounded-2xl font-medium">
-            App Store
-          </button>
-          <button className="border border-[#F04D43] text-[#F04D43] hover:bg-[#F04D43] hover:text-white transition px-6 py-3 rounded-2xl font-medium">
-            سجل مطعمك الآن
-          </button>
-        </div>
+        {/* CTA buttons: staggered scale-in */}
+        <motion.div
+          className="flex flex-wrap items-center justify-center gap-4 mt-10"
+          initial="hidden"
+          animate={isInView ? 'visible' : 'hidden'}
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.1, delayChildren: 1.2 } },
+          }}
+        >
+          {[
+            { label: 'تحميل من Google Play', bg: 'bg-[#36C275]', extra: 'shadow-[0_8px_32px_rgba(54,194,117,0.35)]' },
+            { label: 'App Store',             bg: 'bg-white text-black' },
+            { label: 'سجل مطعمك الآن',       bg: '', extra: 'border border-[#F04D43] text-[#F04D43]' },
+          ].map((btn, i) => (
+            <motion.button
+              key={i}
+              className={`${btn.bg} ${btn.extra ?? ''} px-7 py-3.5 rounded-2xl font-semibold text-sm tracking-wide transition-all`}
+              variants={{
+                hidden: { opacity: 0, scale: 0.75, y: 16 },
+                visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } },
+              }}
+              whileHover={{
+                scale: 1.07,
+                y: -4,
+                boxShadow: i === 0
+                  ? '0 16px 40px rgba(54,194,117,0.45)'
+                  : i === 2
+                    ? '0 8px 24px rgba(240,77,67,0.3)'
+                    : '0 8px 24px rgba(255,255,255,0.15)',
+                transition: { type: 'spring', stiffness: 360, damping: 20 },
+              }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {btn.label}
+            </motion.button>
+          ))}
+        </motion.div>
 
-        {/* الصور الثلاث - محفوظة كما كانت */}
-        <div className="relative flex items-center justify-center gap-6 mt-20 flex-wrap">
-          {/* neon glow */}
-          <div className="absolute w-[500px] h-[300px] bg-[#36C275] blur-[150px] opacity-20 rounded-full" />
+        {/* ── phones: cinematic reveal ── */}
+        <motion.div
+          ref={phonesRef}
+          style={{ y: phonesY }}
+          className="relative flex items-end justify-center gap-4 mt-24 flex-wrap"
+        >
+          {/* atmospheric glow blob */}
+          <motion.div
+            className="absolute pointer-events-none"
+            style={{
+              width: 560, height: 320,
+              left: '50%', top: '40%',
+              transform: 'translate(-50%, -50%)',
+              borderRadius: '50%',
+              background: 'radial-gradient(ellipse, rgba(54,194,117,0.22) 0%, transparent 70%)',
+              filter: 'blur(60px)',
+              scale: glowScale,
+            }}
+            animate={{ opacity: [0.6, 1, 0.6] }}
+            transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut' }}
+          />
 
-          <div className="relative rotate-[-10deg] hover:rotate-[-6deg] transition duration-300">
+          {/* phone left */}
+          <motion.div
+            className="relative"
+            initial={{ opacity: 0, y: 120, rotate: -22, x: -40 }}
+            animate={phonesInView
+              ? { opacity: 1, y: 0, rotate: -11, x: 0 }
+              : { opacity: 0, y: 120, rotate: -22, x: -40 }}
+            transition={{ delay: 0.15, duration: 1.3, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
+            whileHover={{
+              y: -14, rotate: -7,
+              transition: { type: 'spring', stiffness: 280, damping: 22 },
+            }}
+            style={{ cursor: 'pointer', transformOrigin: 'bottom center' }}
+          >
             <Image
               src="/screen1.png"
               alt="Yammy Screen 1"
-              width={260}
-              height={520}
-              className="rounded-[32px] shadow-2xl border border-white/10"
+              width={240}
+              height={480}
+              className="rounded-[28px] shadow-2xl border border-white/10"
             />
-          </div>
+            {/* glass reflection */}
+            <div
+              className="absolute inset-0 rounded-[28px] pointer-events-none"
+              style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.07) 0%, transparent 50%)' }}
+            />
+          </motion.div>
 
-          <div className="relative z-10 scale-110">
+          {/* phone center */}
+          <motion.div
+            className="relative z-10"
+            initial={{ opacity: 0, y: 140, scale: 0.75 }}
+            animate={phonesInView
+              ? { opacity: 1, y: 0, scale: 1 }
+              : { opacity: 0, y: 140, scale: 0.75 }}
+            transition={{ delay: 0, duration: 1.4, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
+            whileHover={{
+              y: -18, scale: 1.04,
+              transition: { type: 'spring', stiffness: 280, damping: 22 },
+            }}
+            style={{ cursor: 'pointer' }}
+          >
             <Image
               src="/screen2.png"
               alt="Yammy Screen 2"
-              width={300}
-              height={600}
-              className="rounded-[36px] shadow-2xl border border-white/10"
+              width={290}
+              height={580}
+              className="rounded-[34px] shadow-[0_32px_80px_rgba(0,0,0,0.7)] border border-white/10"
             />
-            <div className="absolute -top-4 right-6 bg-[#E6B325] text-black px-4 py-2 rounded-full text-sm font-bold shadow-lg">
-              Yammy Stars ⭐
-            </div>
-          </div>
+            <div
+              className="absolute inset-0 rounded-[34px] pointer-events-none"
+              style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 50%)' }}
+            />
 
-          <div className="relative rotate-[10deg] hover:rotate-[6deg] transition duration-300">
+            {/* badge pops in after phone */}
+            <motion.div
+              className="absolute -top-5 right-4 bg-[#E6B325] text-black px-4 py-2 rounded-full text-sm font-black shadow-xl shadow-[#E6B325]/30"
+              initial={{ opacity: 0, scale: 0.3, y: 20, rotate: -15 }}
+              animate={phonesInView
+                ? { opacity: 1, scale: 1, y: 0, rotate: 0 }
+                : { opacity: 0, scale: 0.3, y: 20, rotate: -15 }}
+              transition={{ delay: 1.1, duration: 0.65, type: 'spring', stiffness: 400, damping: 18 }}
+            >
+              Yammy Stars ⭐
+            </motion.div>
+          </motion.div>
+
+          {/* phone right */}
+          <motion.div
+            className="relative"
+            initial={{ opacity: 0, y: 120, rotate: 22, x: 40 }}
+            animate={phonesInView
+              ? { opacity: 1, y: 0, rotate: 11, x: 0 }
+              : { opacity: 0, y: 120, rotate: 22, x: 40 }}
+            transition={{ delay: 0.15, duration: 1.3, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
+            whileHover={{
+              y: -14, rotate: 7,
+              transition: { type: 'spring', stiffness: 280, damping: 22 },
+            }}
+            style={{ cursor: 'pointer', transformOrigin: 'bottom center' }}
+          >
             <Image
               src="/screen3.png"
               alt="Yammy Screen 3"
-              width={260}
-              height={520}
-              className="rounded-[32px] shadow-2xl border border-white/10"
+              width={240}
+              height={480}
+              className="rounded-[28px] shadow-2xl border border-white/10"
             />
-          </div>
-        </div>
+            <div
+              className="absolute inset-0 rounded-[28px] pointer-events-none"
+              style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.07) 0%, transparent 50%)' }}
+            />
+          </motion.div>
+        </motion.div>
 
-      </div>
+      </motion.div>
     </section>
   );
 }
