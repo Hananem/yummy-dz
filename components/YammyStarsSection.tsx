@@ -19,36 +19,35 @@ export default function RewardsSection() {
         </div>
 
         {/* === القسم الأول === */}
-        <div className="flex flex-col lg:flex-row items-center gap-16 mb-32">
+        <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-24 xl:gap-36 mb-32">
 
           {/* المستطيل الأخضر */}
-          <div className="relative flex-shrink-0" style={{ width: '320px', height: '580px', marginLeft: '-24px' }}>
-            <div className="absolute inset-0 bg-[#34B472]" />
+          <div className="relative flex justify-center">
+            <div className="relative flex-shrink-0" style={{ width: '320px', height: '580px' }}>
+              <div className="absolute inset-0 bg-[#34B472]" />
 
-            {/* طبق أعلى اليسار */}
-            <div className="absolute" style={{ top: '60px', left: '-50px', zIndex: 10 }}>
-              <div className="w-[140px] h-[140px] rounded-full overflow-hidden border-4 border-white shadow-2xl">
-                <Image src="/hero1.png" alt="طبق 1" width={140} height={140} className="object-cover" />
+              <div className="absolute" style={{ top: '60px', left: '-50px', zIndex: 10 }}>
+                <div className="w-[140px] h-[140px] rounded-full overflow-hidden border-4 border-white shadow-2xl">
+                  <Image src="/hero1.png" alt="طبق 1" width={140} height={140} className="object-cover" />
+                </div>
               </div>
-            </div>
 
-            {/* طبق أعلى بجانبه */}
-            <div className="absolute" style={{ top: '40px', left: '80px', zIndex: 10 }}>
-              <div className="w-[120px] h-[120px] rounded-full overflow-hidden border-4 border-white shadow-2xl">
-                <Image src="/hero2.png" alt="طبق 2" width={120} height={120} className="object-cover" />
+              <div className="absolute" style={{ top: '40px', left: '80px', zIndex: 10 }}>
+                <div className="w-[120px] h-[120px] rounded-full overflow-hidden border-4 border-white shadow-2xl">
+                  <Image src="/hero2.png" alt="طبق 2" width={120} height={120} className="object-cover" />
+                </div>
               </div>
-            </div>
 
-            {/* طبق الوسط أسفل - رأس المثلث */}
-            <div className="absolute" style={{ top: '170px', left: '10px', zIndex: 10 }}>
-              <div className="w-[160px] h-[160px] rounded-full overflow-hidden border-4 border-white shadow-2xl">
-                <Image src="/hero3.png" alt="طبق 3" width={160} height={160} className="object-cover" />
+              <div className="absolute" style={{ top: '170px', left: '10px', zIndex: 10 }}>
+                <div className="w-[160px] h-[160px] rounded-full overflow-hidden border-4 border-white shadow-2xl">
+                  <Image src="/hero3.png" alt="طبق 3" width={160} height={160} className="object-cover" />
+                </div>
               </div>
             </div>
           </div>
 
           {/* النص */}
-          <div className="w-full lg:w-1/2 text-right space-y-6 lg:pr-16">
+          <div className="text-right space-y-6">
             <div className="inline-block px-3 py-1 rounded-full bg-[#36C275]/10 border border-[#36C275]/30 text-[#36C275] text-sm">
               للمستخدمين
             </div>
@@ -93,29 +92,10 @@ export default function RewardsSection() {
         </div>
 
         {/* === القسم الثاني === */}
-        <div className="flex flex-col lg:flex-row-reverse items-center gap-16 mb-32">
+        <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-24 xl:gap-36 mb-32">
 
-          {/* المستطيل الأحمر */}
-          <div className="relative flex-shrink-0" style={{ width: '320px', height: '580px', marginRight: '-24px' }}>
-            <div className="absolute inset-0 bg-[#E63946]" />
-
-            {/* السكرين على الحافة اليمنى */}
-            <div
-              className="absolute"
-              style={{ top: '50%', right: '-55px', transform: 'translateY(-50%)', zIndex: 10 }}
-            >
-              <div
-                className="relative bg-[#1a1a2e] rounded-[36px] border-[6px] border-[#2a2a3e] overflow-hidden shadow-2xl"
-                style={{ width: '210px', height: '420px' }}
-              >
-                <Image src="/screen1.png" alt="App Screen" fill className="object-cover" />
-                <div className="absolute top-3 left-1/2 -translate-x-1/2 w-16 h-4 bg-[#1a1a2e] rounded-full z-10" />
-              </div>
-            </div>
-          </div>
-
-          {/* النص */}
-          <div className="w-full lg:w-1/2 text-right space-y-6 lg:pl-16">
+          {/* النص — يسار */}
+          <div className="text-right space-y-6 order-2 lg:order-1">
             <div className="inline-block px-3 py-1 rounded-full bg-[#36C275]/10 border border-[#36C275]/30 text-[#36C275] text-sm">
               للمطاعم
             </div>
@@ -156,8 +136,8 @@ export default function RewardsSection() {
               <div className="bg-gradient-to-br from-[#36C275]/20 to-[#1A2535] border border-[#36C275]/40 rounded-2xl p-4">
                 <div className="space-y-2 text-right">
                   {[
-                    { stars: '⭐', label: 'مطعم موصى به', color: 'text-gray-300' },
-                    { stars: '⭐⭐', label: 'جودة ممتازة', color: 'text-gray-300' },
+                    { stars: '⭐',     label: 'مطعم موصى به',  color: 'text-gray-300' },
+                    { stars: '⭐⭐',   label: 'جودة ممتازة',   color: 'text-gray-300' },
                     { stars: '⭐⭐⭐', label: 'Yammy Premium', color: 'text-[#36C275] font-bold' },
                   ].map((item, i) => (
                     <div key={i} className="flex items-center justify-end gap-2 text-sm">
@@ -165,6 +145,26 @@ export default function RewardsSection() {
                       <span>{item.stars}</span>
                     </div>
                   ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* المستطيل الأحمر — يمين */}
+          <div className="relative flex justify-end order-1 lg:order-2">
+            <div className="relative flex-shrink-0" style={{ width: '200px', height: '580px' }}>
+              <div className="absolute inset-0 bg-[#E63946]" />
+
+              <div
+                className="absolute"
+                style={{ top: '50%', right: '-55px', transform: 'translateY(-50%)', zIndex: 10 }}
+              >
+                <div
+                  className="relative bg-[#1a1a2e] rounded-[36px] border-[6px] border-[#2a2a3e] overflow-hidden shadow-2xl"
+                  style={{ width: '210px', height: '420px' }}
+                >
+                  <Image src="/screen1.png" alt="App Screen" fill className="object-cover" />
+                  <div className="absolute top-3 left-1/2 -translate-x-1/2 w-16 h-4 bg-[#1a1a2e] rounded-full z-10" />
                 </div>
               </div>
             </div>
