@@ -25,7 +25,7 @@ export default function RewardsSection() {
   };
 
   return (
-    <section className="py-32 bg-[#0F1720] text-white ">
+    <section className="py-32 bg-[#0F1720] text-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
 
         {/* Header */}
@@ -55,35 +55,46 @@ export default function RewardsSection() {
           {rewards.map((reward, index) => {
             const total = rewards.length;
 
-            const relativeIndex =
-              (index - active + total) % total;
+            const relativeIndex = (index - active + total) % total;
 
             const centeredIndex =
               relativeIndex > total / 2
                 ? relativeIndex - total
                 : relativeIndex;
 
-            const x = centeredIndex * 180;
+            // حساب الإحداثيات
+            const x = centeredIndex * 190; // زدت المسافة قليلاً لمنع التداخل العنيف
             const y = Math.abs(centeredIndex) * 55;
 
             const isActive = centeredIndex === 0;
+            
+            // حساب المسافة عن المركز (0 يعني في المنتصف تماماً، 1 يعني خطوة واحدة يمين أو يسار.. وهكذا)
+            const distanceFromCenter = Math.abs(centeredIndex);
+
+            // إخفاء العناصر التي تقفز في الخلف تماماً لمنع التشوه البصري
+            const isHidden = distanceFromCenter > 2; 
+
+            // ترتيب الطبقات: كلما كان قريب للمنتصف يكون z-index أعلى
+            const zIndex = 50 - distanceFromCenter * 10;
 
             return (
               <div
                 key={reward.name}
-                className="absolute transition-all duration-700 ease-out"
+                className="absolute transition-all duration-700 ease-in-out"
                 style={{
                   transform: `translate(${x}px, ${y}px)`,
-                  zIndex: isActive ? 50 : 10,
+                  zIndex: zIndex,
                 }}
               >
                 <div
                   className={`
-                    relative rounded-3xl px-8 py-10 border transition-all duration-700 overflow-visible
+                    relative rounded-3xl px-8 py-10 border transition-all duration-750 overflow-visible w-[220px]
                     ${
                       isActive
-                        ? 'scale-125 bg-gradient-to-br from-[#34B472] to-[#47DF90] border-transparent shadow-[0_0_80px_rgba(71,223,144,.6)]'
-                        : 'scale-90 bg-white/5 border-white/10 opacity-60'
+                        ? 'scale-125 bg-gradient-to-br from-[#34B472] to-[#47DF90] border-transparent shadow-[0_0_80px_rgba(71,223,144,.6)] opacity-100'
+                        : isHidden 
+                        ? 'scale-50 opacity-0 pointer-events-none' // اختفاء ناعم للعنصر القافز خلف الكواليس
+                        : 'scale-90 bg-white/5 border-white/10 opacity-40 hover:opacity-70'
                     }
                   `}
                 >
@@ -98,12 +109,12 @@ export default function RewardsSection() {
 
                   {/* TEXT */}
                   <div className="relative z-10 text-center mt-8">
-                    <div className="text-xl md:text-2xl font-bold">
+                    <div className="text-xl font-bold truncate">
                       {reward.name}
                     </div>
 
                     {isActive && (
-                      <div className="mt-2 text-sm text-white/90">
+                      <div className="mt-2 text-xs text-white/90 whitespace-nowrap">
                         Disponible avec Yammy Stars ⭐
                       </div>
                     )}
@@ -116,7 +127,6 @@ export default function RewardsSection() {
 
         {/* Arrows */}
         <div className="flex justify-center gap-4 mt-8">
-
           <button
             onClick={prev}
             className="w-14 h-14 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition flex items-center justify-center"
@@ -130,7 +140,6 @@ export default function RewardsSection() {
           >
             <ChevronRight size={22} />
           </button>
-
         </div>
 
       </div>
