@@ -14,87 +14,118 @@ const screenshots = [
   '/screenshots8.png',
   '/screenshots4.png',
   '/screenshots5.png',
-  '/screenshots7.png',
+   '/screenshots7.png',
   '/screenshots8.png',
+  '/screenshots4.png',
   '/screenshots5.png',
-  '/screenshots7.png',
-  '/screenshots8.png',
 ];
-
-// نحدد هنا عدد الصور التي نريد إظهارها على الهاتف فقط (مثلاً أول 4 صور)
-const MOBILE_LIMIT = 4;
 
 export default function ScreenshotsSection() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  
-  // هذه الحالة لمعرفة إن كان المودال يَعرض الصور المتاحة للهاتف فقط أم الكل
-  const [isMobileModal, setIsMobileModal] = useState(false);
 
-  const openModal = (index: number, forMobile: boolean) => {
+  // mobile slider index
+  const [mobileIndex, setMobileIndex] = useState(0);
+
+  const VISIBLE = 4;
+
+  const openModal = (index: number) => {
     setCurrentIndex(index);
-    setIsMobileModal(forMobile);
     setIsOpen(true);
   };
 
   const closeModal = () => setIsOpen(false);
 
-  // تحديد الطول الحالي بناءً على نوع المودال المفتوح لضمان توافق الأرقام والأزرار
-  const currentLength = isMobileModal ? MOBILE_LIMIT : screenshots.length;
-
-  const next = () => {
-    setCurrentIndex((prev) => (prev + 1) % currentLength);
+  const nextModal = () => {
+    setCurrentIndex((p) => (p + 1) % screenshots.length);
   };
 
-  const prev = () => {
-    setCurrentIndex((prev) =>
-      prev === 0 ? currentLength - 1 : prev - 1
+  const prevModal = () => {
+    setCurrentIndex((p) =>
+      p === 0 ? screenshots.length - 1 : p - 1
     );
   };
 
+  // mobile arrows control
+  const nextMobile = () => {
+    setMobileIndex((p) =>
+      p + VISIBLE >= screenshots.length ? 0 : p + 1
+    );
+  };
+
+  const prevMobile = () => {
+    setMobileIndex((p) =>
+      p === 0 ? screenshots.length - VISIBLE : p - 1
+    );
+  };
+
+  const mobileVisible = screenshots.slice(
+    mobileIndex,
+    mobileIndex + VISIBLE
+  );
+
   return (
-    <section className="py-20 bg-[#0F1720]">
+    <section className="py-20 bg-[#0F1720] overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
         <h2 className="text-4xl font-bold text-white text-center mb-12">
           لمحة من التطبيق
         </h2>
 
-        {/* thumbnails */}
-        <div className="flex gap-3 justify-center overflow-x-auto pb-8 scrollbar-hide">
-          {screenshots.map((src, index) => {
-            const isExtra = index >= MOBILE_LIMIT;
+        {/* ================= DESKTOP ================= */}
+        <div className="hidden md:flex gap-3 justify-center pb-8">
+          {screenshots.map((src, index) => (
+            <div
+              key={index}
+              onClick={() => openModal(index)}
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
+              className="relative flex-shrink-0 cursor-pointer rounded-2xl overflow-hidden shadow-2xl transition-all duration-500"
+              style={{
+                width: hoveredIndex === index ? '280px' : '60px',
+                height: '500px',
+              }}
+            >
+              <Image src={src} alt="" fill className="object-cover" />
+            </div>
+          ))}
+        </div>
 
-            return (
+        {/* ================= MOBILE (ARROWS ONLY) ================= */}
+        <div className="md:hidden relative flex items-center justify-center gap-2">
+          
+          {/* left arrow */}
+          <button
+            onClick={prevMobile}
+            className="z-10 bg-black/40 text-white p-2 rounded-full"
+          >
+            <ChevronLeft />
+          </button>
+
+          {/* 4 images */}
+          <div className="flex gap-2">
+            {mobileVisible.map((src, index) => (
               <div
                 key={index}
-                // عند الضغط، نمرر للمودال ما إذا كان الكارت مفتوحاً من قائمة الهاتف الفلاتر أم القائمة الكاملة
-                onClick={() => openModal(index, isExtra ? false : true)}
-                
-                // التعديل السحري هنا: الصور الإضافية تختفي في الشاشات الصغيرة وتظهر في md وما فوق
-                className={`relative flex-shrink-0 cursor-pointer rounded-2xl overflow-hidden shadow-2xl transition-all duration-500 ${
-                  isExtra ? 'hidden md:block' : 'block'
-                }`}
-                style={{
-                  width: hoveredIndex === index ? '280px' : '60px',
-                  height: '500px',
-                }}
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
+                onClick={() => openModal(index + mobileIndex)}
+                className="relative w-[70px] h-[260px] rounded-xl overflow-hidden shadow-lg cursor-pointer"
               >
-                <Image
-                  src={src}
-                  alt={`Screenshot ${index + 1}`}
-                  fill
-                  className="object-cover"
-                />
+                <Image src={src} alt="" fill className="object-cover" />
               </div>
-            );
-          })}
+            ))}
+          </div>
+
+          {/* right arrow */}
+          <button
+            onClick={nextMobile}
+            className="z-10 bg-black/40 text-white p-2 rounded-full"
+          >
+            <ChevronRight />
+          </button>
         </div>
       </div>
 
-      {/* MODAL (NOT FULLSCREEN) */}
+      {/* ================= MODAL ================= */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -103,36 +134,33 @@ export default function ScreenshotsSection() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            {/* modal box */}
             <motion.div
               className="relative bg-[#0F1720] rounded-3xl shadow-2xl p-4 w-[320px] md:w-[420px]"
-              initial={{ scale: 0.9, y: 20, opacity: 0 }}
-              animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.9, y: 20, opacity: 0 }}
-              transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
             >
               {/* close */}
               <button
                 onClick={closeModal}
-                className="absolute top-3 right-3 text-white/70 hover:text-white z-20"
+                className="absolute top-3 right-3 text-white/70 hover:text-white"
               >
                 <X size={22} />
               </button>
 
-              {/* image slider */}
-              <div className="relative w-full h-[600px] overflow-hidden rounded-2xl">
+              {/* image */}
+              <div className="relative w-full h-[600px] rounded-2xl overflow-hidden">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={currentIndex}
+                    className="absolute inset-0"
                     initial={{ x: 80, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     exit={{ x: -80, opacity: 0 }}
-                    transition={{ duration: 0.35, ease: 'easeInOut' }}
-                    className="absolute inset-0"
                   >
                     <Image
                       src={screenshots[currentIndex]}
-                      alt="preview"
+                      alt=""
                       fill
                       className="object-cover"
                     />
@@ -142,22 +170,16 @@ export default function ScreenshotsSection() {
 
               {/* controls */}
               <div className="flex justify-between mt-4">
-                <button
-                  onClick={prev}
-                  className="text-white/70 hover:text-white transition"
-                >
-                  <ChevronLeft />
+                <button onClick={prevModal}>
+                  <ChevronLeft className="text-white/70" />
                 </button>
 
                 <div className="text-white/50 text-sm">
-                  {currentIndex + 1} / {currentLength}
+                  {currentIndex + 1} / {screenshots.length}
                 </div>
 
-                <button
-                  onClick={next}
-                  className="text-white/70 hover:text-white transition"
-                >
-                  <ChevronRight />
+                <button onClick={nextModal}>
+                  <ChevronRight className="text-white/70" />
                 </button>
               </div>
             </motion.div>
