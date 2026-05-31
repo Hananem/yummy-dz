@@ -52,8 +52,6 @@ const testimonials = [
   },
 ];
 
-const VISIBLE = 3;
-
 export default function TestimonialsSection() {
   const [active, setActive] = useState(0);
   const total = testimonials.length;
@@ -61,13 +59,15 @@ export default function TestimonialsSection() {
 
   const startAuto = () => {
     intervalRef.current = setInterval(() => {
-      setActive(p => (p + 1) % total);
+      setActive((p) => (p + 1) % total);
     }, 4000);
   };
 
   useEffect(() => {
     startAuto();
-    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
   }, []);
 
   const goTo = (i: number) => {
@@ -76,18 +76,23 @@ export default function TestimonialsSection() {
     startAuto();
   };
 
-  // which 3 to show: active, active+1, active+2
-  const visible = [0, 1, 2].map(offset => (active + offset) % total);
+  // desktop: 3 cards, mobile: 1 card only
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
+  const visible = isMobile
+    ? [active]
+    : [0, 1, 2].map((offset) => (active + offset) % total);
 
   return (
-    <section className="py-28  text-white " dir="rtl">
-
+    <section className="py-28 text-white" dir="rtl">
       {/* header */}
       <div className="text-center mb-16 px-6">
         <div className="inline-block px-4 py-2 rounded-full border border-[#36C275]/30 bg-[#36C275]/10 text-[#36C275] text-sm mb-4">
           آراء المستخدمين
         </div>
-        <h2 className="text-4xl md:text-5xl font-bold mb-4">ماذا يقولون عنّا</h2>
+        <h2 className="text-4xl md:text-5xl font-bold mb-4">
+          ماذا يقولون عنّا
+        </h2>
         <p className="text-gray-400 text-lg max-w-xl mx-auto">
           آلاف الجزائريين يثقون في Yammy Dz يومياً
         </p>
@@ -99,11 +104,14 @@ export default function TestimonialsSection() {
           {visible.map((idx, pos) => {
             const t = testimonials[idx];
             const isCenter = pos === 0;
+
             return (
               <div
                 key={`${idx}-${pos}`}
                 onClick={() => goTo(idx)}
-                className="cursor-pointer rounded-3xl p-6 flex flex-col gap-4 transition-all duration-500"
+                className={`cursor-pointer rounded-3xl p-6 flex flex-col gap-4 transition-all duration-500 ${
+                  isMobile ? 'mx-auto w-full max-w-md' : ''
+                }`}
                 style={{
                   background: isCenter
                     ? 'linear-gradient(135deg, rgba(54,194,117,0.15) 0%, rgba(15,23,32,0.9) 100%)'
@@ -121,7 +129,9 @@ export default function TestimonialsSection() {
                 {/* stars */}
                 <div className="flex gap-1">
                   {Array.from({ length: t.rating }).map((_, s) => (
-                    <span key={s} className="text-[#E6B325] text-sm">★</span>
+                    <span key={s} className="text-[#E6B325] text-sm">
+                      ★
+                    </span>
                   ))}
                 </div>
 
@@ -132,12 +142,20 @@ export default function TestimonialsSection() {
                 <div className="h-px bg-white/6" />
 
                 <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg flex-shrink-0 ${isCenter ? 'bg-[#36C275]/20 border border-[#36C275]/30' : 'bg-white/5 border border-white/10'}`}>
+                  <div
+                    className={`w-10 h-10 rounded-full flex items-center justify-center text-lg flex-shrink-0 ${
+                      isCenter
+                        ? 'bg-[#36C275]/20 border border-[#36C275]/30'
+                        : 'bg-white/5 border border-white/10'
+                    }`}
+                  >
                     {t.avatar}
                   </div>
                   <div className="text-right">
                     <p className="font-bold text-sm">{t.name}</p>
-                    <p className="text-gray-500 text-xs">{t.role} · {t.city}</p>
+                    <p className="text-gray-500 text-xs">
+                      {t.role} · {t.city}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -162,7 +180,6 @@ export default function TestimonialsSection() {
           ))}
         </div>
       </div>
-
     </section>
   );
 }

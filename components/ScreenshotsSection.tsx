@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -21,71 +21,63 @@ const screenshots = [
   '/screenshots8.png',
 ];
 
+// نحدد هنا عدد الصور التي نريد إظهارها على الهاتف فقط (مثلاً أول 4 صور)
+const MOBILE_LIMIT = 4;
+
 export default function ScreenshotsSection() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   
-  // مرجع لحساب قيود السحب في السلايدر الخاص بالهاتف
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState(0);
+  // هذه الحالة لمعرفة إن كان المودال يَعرض الصور المتاحة للهاتف فقط أم الكل
+  const [isMobileModal, setIsMobileModal] = useState(false);
 
-  useEffect(() => {
-    if (carouselRef.current) {
-      // حساب المسافة القابلة للتمرير لمنع السلايدر من الخروج عن الشاشة عند السحب
-      setWidth(carouselRef.current.scrollWidth - carouselRef.current.offsetWidth);
-    }
-  }, []);
-
-  const openModal = (index: number) => {
+  const openModal = (index: number, forMobile: boolean) => {
     setCurrentIndex(index);
+    setIsMobileModal(forMobile);
     setIsOpen(true);
   };
 
   const closeModal = () => setIsOpen(false);
 
+  // تحديد الطول الحالي بناءً على نوع المودال المفتوح لضمان توافق الأرقام والأزرار
+  const currentLength = isMobileModal ? MOBILE_LIMIT : screenshots.length;
+
   const next = () => {
-    setCurrentIndex((prev) => (prev + 1) % screenshots.length);
+    setCurrentIndex((prev) => (prev + 1) % currentLength);
   };
 
   const prev = () => {
     setCurrentIndex((prev) =>
-      prev === 0 ? screenshots.length - 1 : prev - 1
+      prev === 0 ? currentLength - 1 : prev - 1
     );
   };
 
   return (
-    <section className="py-20 bg-[#0F1720] overflow-hidden">
+    <section className="py-20 bg-[#0F1720]">
       <div className="max-w-7xl mx-auto px-6">
         <h2 className="text-4xl font-bold text-white text-center mb-12">
           لمحة من التطبيق
         </h2>
 
-        {/* السلايدر المتجاوب */}
-        {/* في أجهزة الكمبيوتر (lg): يظهر كقائمة مرنة عادية مع تأثير الهوفر */}
-        {/* في الهواتف: يتحول إلى سلايدر سحب ناعم جداً يدعم اللمس */}
-        <motion.div 
-          ref={carouselRef} 
-          className="cursor-grab active:cursor-grabbing lg:cursor-default overflow-hidden"
-        >
-          <motion.div
-            drag="x"
-            dragConstraints={{ right: 0, left: -width }}
-            // تفعيل السحب فقط على الشاشات الأصغر من lg (الكمبيوتر لا يحتاج سحب)
-            dragListener={typeof window !== 'undefined' && window.innerWidth < 1024}
-            className="flex gap-4 lg:justify-center w-max lg:w-full pb-8"
-          >
-            {screenshots.map((src, index) => (
+        {/* thumbnails */}
+        <div className="flex gap-3 justify-center overflow-x-auto pb-8 scrollbar-hide">
+          {screenshots.map((src, index) => {
+            const isExtra = index >= MOBILE_LIMIT;
+
+            return (
               <div
                 key={index}
-                onClick={() => openModal(index)}
-                className="relative flex-shrink-0 rounded-2xl overflow-hidden shadow-2xl transition-all duration-500 select-none"
+                // عند الضغط، نمرر للمودال ما إذا كان الكارت مفتوحاً من قائمة الهاتف الفلاتر أم القائمة الكاملة
+                onClick={() => openModal(index, isExtra ? false : true)}
+                
+                // التعديل السحري هنا: الصور الإضافية تختفي في الشاشات الصغيرة وتظهر في md وما فوق
+                className={`relative flex-shrink-0 cursor-pointer rounded-2xl overflow-hidden shadow-2xl transition-all duration-500 ${
+                  isExtra ? 'hidden md:block' : 'block'
+                }`}
                 style={{
-                  // في الهاتف نثبت العرض على 220px ليظهر السلايدر بشكل متناسق، وفي الكمبيوتر يعود للتأثير الأصلي
-                  width: typeof window !== 'undefined' && window.innerWidth >= 1024 
-                    ? (hoveredIndex === index ? '280px' : '60px') 
-                    : '220px',
-                  height: typeof window !== 'undefined' && window.innerWidth >= 1024 ? '500px' : '400px',
+                  width: hoveredIndex === index ? '280px' : '60px',
+                  height: '500px',
                 }}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
@@ -94,12 +86,12 @@ export default function ScreenshotsSection() {
                   src={src}
                   alt={`Screenshot ${index + 1}`}
                   fill
-                  className="object-cover pointer-events-none" // منع افتراضيات المتصفح لتسهيل السحب
+                  className="object-cover"
                 />
               </div>
-            ))}
-          </motion.div>
-        </motion.div>
+            );
+          })}
+        </div>
       </div>
 
       {/* MODAL (NOT FULLSCREEN) */}
@@ -158,7 +150,7 @@ export default function ScreenshotsSection() {
                 </button>
 
                 <div className="text-white/50 text-sm">
-                  {currentIndex + 1} / {screenshots.length}
+                  {currentIndex + 1} / {currentLength}
                 </div>
 
                 <button

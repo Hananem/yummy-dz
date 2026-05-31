@@ -28,7 +28,7 @@ export default function HowItWorksSection() {
       className="py-32 px-6 bg-[#0F1720] text-white overflow-hidden"
       dir="rtl"
     >
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
+     <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-start">
 
         {/* النص */}
         <div className="lg:sticky top-32 text-right">
@@ -50,7 +50,7 @@ export default function HowItWorksSection() {
         </div>
 
         {/* البطاقات */}
-        <div className="flex flex-col gap-10 mt-90">
+        <div className="flex flex-col gap-6 lg:gap-10 mt-10 lg:mt-20">
           {steps.map((step, i) => (
             <div
               key={i}

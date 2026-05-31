@@ -243,11 +243,11 @@ export default function HeroSection() {
         </motion.div>
 
         {/* phones */}
-        <motion.div
-          ref={phonesRef}
-          style={{ y: phonesY }}
-          className="relative flex items-end justify-center gap-4 mt-10 flex-wrap"
-        >
+       <motion.div
+  ref={phonesRef}
+  style={{ y: phonesY }}
+  className="relative hidden md:flex items-end justify-center gap-4 mt-10 flex-wrap"
+>
           {/* glow blob */}
           <motion.div
             className="absolute pointer-events-none"

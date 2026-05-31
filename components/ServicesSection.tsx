@@ -32,7 +32,8 @@ export default function ServicesSection() {
           </div>
 
           {/* الهاتف - المنتصف */}
-          <div className="relative w-[360px] h-[480px] flex-shrink-0 flex items-center justify-center">
+         {/* الهاتف - المنتصف */}
+<div className="relative w-[360px] h-[480px] flex-shrink-0 hidden lg:flex items-center justify-center">
 
             {/* الدائرة الخضراء الصلبة مع neon حولها فقط */}
             <div
