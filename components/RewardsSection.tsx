@@ -1,31 +1,39 @@
 'use client';
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const rewards = [
-  { name: 'سماعات AirPods', image: '/gift1.jpg' },
-  { name: 'ساعة ذكية', image: '/gift2.jpg' },
-  { name: 'هاتف iPhone', image: '/gift3.jpg' },
-  { name: 'جهاز PlayStation 5', image: '/gift4.jpg' },
-  { name: 'حاسوب محمول', image: '/gift5.jpg' },
-  { name: 'حقيبة ظهر', image: '/gift6.jpg' },
-  { name: 'سكوتر', image: '/gift7.jpg' },
-  { name: 'دراجة هوائية', image: '/gift8.jpg' },
-  { name: 'سيارة', image: '/gift9.jpg' },
-  { name: 'قمصان', image: '/gift10.jpg' },
-  { name: 'قبعات', image: '/gift11.jpg' },
-  { name: 'دعوة إلى مطعم', image: '/gift12.jpg' },
+  { name: 'دراجة هوائية', image: '/gift1.jpg' },
+  { name: 'قبعة', image: '/gift2.jpg' },
+  { name: 'PlayStation', image: '/gift3.jpg' },
+  { name: 'سيارة', image: '/gift4.jpg' },
+  { name: 'AirPods', image: '/gift5.jpg' },
+  { name: 'ساعة ذكية', image: '/gift6.jpg' },
+  { name: 'سكوتر', image: '/gift13.jpg' },
+  { name: 'حقيبة ظهر', image: '/gift8.jpg' },
+  { name: 'iPhone', image: '/gift9.jpg' },
+  { name: 'حاسوب محمول', image: '/gift10.jpg' },
+  { name: 'Bluetooth Speaker', image: '/gift11.jpg' },
 ];
 
 const CONFIG = {
-  cardWidth: 158,
-  activeCardWidth: 172,
-  imageSize: 185,
-  sideImageSize: 90,
-  spacingX: 152,
-  spacingY: 50,
-  activeScale: 1.23,
-  maxVisibleDistance: 3,     // عدد العناصر المرئية من كل جانب
+  cardWidth: 190,          
+  activeCardWidth: 210,    
+  imageSize: 250,          
+  sideImageSize: 130,      
+  spacingX: 190,           
+  spacingY: 55,            
+  activeScale: 1.25,       
+  maxVisibleDistance: 3, 
+};
+
+// تحديد زوايا الاندفاع لكل إيموجي (X, Y) خارج حدود البطاقة
+const emojiVariants = {
+  topLeft: { initial: { scale: 0, x: 0, y: 0, opacity: 0 }, animate: { scale: [0, 1.5, 1], x: -35, y: -35, opacity: [0, 1, 1, 0] } },
+  topRight: { initial: { scale: 0, x: 0, y: 0, opacity: 0 }, animate: { scale: [0, 1.5, 1], x: 35, y: -35, opacity: [0, 1, 1, 0] } },
+  bottomLeft: { initial: { scale: 0, x: 0, y: 0, opacity: 0 }, animate: { scale: [0, 1.5, 1], x: -35, y: 35, opacity: [0, 1, 1, 0] } },
+  bottomRight: { initial: { scale: 0, x: 0, y: 0, opacity: 0 }, animate: { scale: [0, 1.5, 1], x: 35, y: 35, opacity: [0, 1, 1, 0] } },
 };
 
 export default function RewardsSection() {
@@ -35,7 +43,7 @@ export default function RewardsSection() {
   const next = () => setActive((p) => (p + 1) % rewards.length);
 
   return (
-    <section className="py-32 bg-[#0F1720] text-white overflow-hidden">
+    <section className="py-36 bg-[#0F1720] text-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-20">
           <div className="inline-block px-4 py-2 rounded-full border border-[#34B472]/20 bg-[#34B472]/10 text-[#47DF90] text-sm mb-6">
@@ -47,14 +55,13 @@ export default function RewardsSection() {
           </h2>
         </div>
 
-        <div className="relative h-[560px] flex items-center justify-center">
-          <div className="absolute w-[380px] h-[380px] rounded-full bg-[#47DF90]/15 blur-[110px]" />
+        <div className="relative h-[540px] flex items-center justify-center">
+          <div className="absolute w-[450px] h-[450px] rounded-full bg-[#47DF90]/15 blur-[120px]" />
 
           {rewards.map((reward, index) => {
             const diff = index - active;
             let centeredDiff = diff % rewards.length;
             
-            // تحسين حساب المسافة لتقليل القفزة
             if (centeredDiff > rewards.length / 2) centeredDiff -= rewards.length;
             if (centeredDiff < -rewards.length / 2) centeredDiff += rewards.length;
 
@@ -65,7 +72,7 @@ export default function RewardsSection() {
             const x = centeredDiff * CONFIG.spacingX;
             const y = distance * CONFIG.spacingY;
 
-            if (!isVisible) return null; // إخفاء كامل للعناصر البعيدة (يمنع القفز)
+            if (!isVisible) return null;
 
             return (
               <div
@@ -78,31 +85,83 @@ export default function RewardsSection() {
                 }}
               >
                 <div
-                  className={`rounded-3xl border p-3 text-center transition-all ${
+                  className={`relative rounded-3xl border p-3 text-center transition-all duration-500 ${
                     isActive
                       ? 'bg-gradient-to-br from-[#34B472] to-[#47DF90] border-transparent shadow-2xl shadow-[#47DF90]/60'
                       : 'bg-zinc-900/70 border-zinc-700'
                   }`}
                   style={{ width: isActive ? CONFIG.activeCardWidth : CONFIG.cardWidth }}
                 >
-                  <div className="flex justify-center -mt-10 mb-3">
+                  {/* تأثير انبثاق، اندفاع، واختفاء الإيموجيات باستخدام AnimatePresence */}
+                  <AnimatePresence mode="popLayout">
+                    {isActive && (
+                      <>
+                        {/* زاوية علوية يسار */}
+                        <motion.span
+                          key={`tl-${active}`}
+                          variants={emojiVariants.topLeft}
+                          initial="initial"
+                          animate="animate"
+                          transition={{ duration: 1.2, ease: "easeOut" }}
+                          className="absolute top-0 left-0 text-2xl select-none pointer-events-none z-50"
+                        >
+                          🎉
+                        </motion.span>
+                        {/* زاوية علوية يمين */}
+                        <motion.span
+                          key={`tr-${active}`}
+                          variants={emojiVariants.topRight}
+                          initial="initial"
+                          animate="animate"
+                          transition={{ duration: 1.2, ease: "easeOut" }}
+                          className="absolute top-0 right-0 text-2xl select-none pointer-events-none z-50"
+                        >
+                          🥳
+                        </motion.span>
+                        {/* زاوية سفلية يسار */}
+                        <motion.span
+                          key={`bl-${active}`}
+                          variants={emojiVariants.bottomLeft}
+                          initial="initial"
+                          animate="animate"
+                          transition={{ duration: 1.2, ease: "easeOut" }}
+                          className="absolute bottom-0 left-0 text-2xl select-none pointer-events-none z-50"
+                        >
+                          ✨
+                        </motion.span>
+                        {/* زاوية سفلية يمين */}
+                        <motion.span
+                          key={`br-${active}`}
+                          variants={emojiVariants.bottomRight}
+                          initial="initial"
+                          animate="animate"
+                          transition={{ duration: 1.2, ease: "easeOut" }}
+                          className="absolute bottom-0 right-0 text-2xl select-none pointer-events-none z-50"
+                        >
+                          🎉
+                        </motion.span>
+                      </>
+                    )}
+                  </AnimatePresence>
+
+                  <div className={`flex justify-center mb-2 ${isActive ? '-mt-20' : '-mt-16'}`}>
                     <img
                       src={reward.image}
                       alt={reward.name}
-                      className={`object-contain drop-shadow-2xl transition-all ${
-                        isActive 
-                          ? `w-[${CONFIG.imageSize}px] h-[${CONFIG.imageSize}px]` 
-                          : `w-[${CONFIG.sideImageSize}px] h-[${CONFIG.sideImageSize}px]`
-                      }`}
+                      className="object-contain drop-shadow-2xl transition-all duration-500"
+                      style={{
+                        width: isActive ? `${CONFIG.imageSize}px` : `${CONFIG.sideImageSize}px`,
+                        height: isActive ? `${CONFIG.imageSize}px` : `${CONFIG.sideImageSize}px`,
+                      }}
                     />
                   </div>
 
-                  <div className={`font-bold ${isActive ? 'text-lg' : 'text-sm'} min-h-[44px]`}>
+                  <div className={`font-bold ${isActive ? 'text-lg' : 'text-sm'} min-h-[36px] flex items-center justify-center`}>
                     {reward.name}
                   </div>
 
                   {isActive && (
-                    <div className="text-xs text-white/90 mt-3">
+                    <div className="text-[11px] text-white/90 mt-2 animate-fade-in">
                       ⭐ متاح مع Yammy Stars
                     </div>
                   )}
@@ -112,11 +171,11 @@ export default function RewardsSection() {
           })}
         </div>
 
-        <div className="flex justify-center gap-6 mt-8">
-          <button onClick={prev} className="w-14 h-14 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 flex items-center justify-center">
+        <div className="flex justify-center gap-6 mt-4">
+          <button onClick={prev} className="w-14 h-14 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 flex items-center justify-center transition-colors">
             <ChevronLeft size={26} />
           </button>
-          <button onClick={next} className="w-14 h-14 rounded-full bg-gradient-to-r from-[#34B472] to-[#47DF90] flex items-center justify-center">
+          <button onClick={next} className="w-14 h-14 rounded-full bg-gradient-to-r from-[#34B472] to-[#47DF90] flex items-center justify-center hover:opacity-90 transition-opacity">
             <ChevronRight size={26} />
           </button>
         </div>
