@@ -9,20 +9,22 @@ import {
 } from 'framer-motion';
 import { useRef } from 'react';
 
+// المصفوفات تحتوي على 5 صور كاملة للشاشات الكبيرة
+// تم ضبط smShow لتظهر صورتان فقط على الجوال وتم تصغير smSize لهما
 const leftDishes = [
-  { src: '/hero1.png', size: 130, top: '8%',  left: '0%',  floatDelay: 0,   floatDur: 6   },
-  { src: '/hero2.png', size: 110, top: '27%', left: '4%',  floatDelay: 1.5, floatDur: 7   },
-  { src: '/hero3.png', size: 155, top: '50%', left: '-2%', floatDelay: 0.8, floatDur: 8   },
-  { src: '/hero4.png', size: 120, top: '70%', left: '6%',  floatDelay: 2,   floatDur: 6.5 },
-  { src: '/hero5.png', size: 100, top: '86%', left: '2%',  floatDelay: 1,   floatDur: 7.5 },
+  { src: '/hero1.png', size: 130, smSize: 45, top: '8%',  left: '0%',  floatDelay: 0,   floatDur: 6,   smShow: true  },
+  { src: '/hero2.png', size: 110, smSize: 0,  top: '27%', left: '4%',  floatDelay: 1.5, floatDur: 7,   smShow: false },
+  { src: '/hero3.png', size: 155, smSize: 55, top: '50%', left: '-2%', floatDelay: 0.8, floatDur: 8,   smShow: true  },
+  { src: '/hero4.png', size: 120, smSize: 0,  top: '70%', left: '6%',  floatDelay: 2,   floatDur: 6.5, smShow: false },
+  { src: '/hero5.png', size: 100, smSize: 0,  top: '86%', left: '2%',  floatDelay: 1,   floatDur: 7.5, smShow: false },
 ];
 
 const rightDishes = [
-  { src: '/hero3.png', size: 140, top: '6%',  right: '0%',  floatDelay: 0.5, floatDur: 7   },
-  { src: '/hero5.png', size: 115, top: '24%', right: '4%',  floatDelay: 1.8, floatDur: 6   },
-  { src: '/hero1.png', size: 150, top: '47%', right: '-2%', floatDelay: 1.2, floatDur: 8.5 },
-  { src: '/hero7.png', size: 110, top: '67%', right: '5%',  floatDelay: 0.3, floatDur: 7   },
-  { src: '/hero6.png', size: 125, top: '83%', right: '1%',  floatDelay: 2.2, floatDur: 6.5 },
+  { src: '/hero3.png', size: 140, smSize: 50, top: '6%',  right: '0%',  floatDelay: 0.5, floatDur: 7,   smShow: true  },
+  { src: '/hero5.png', size: 115, smSize: 0,  top: '24%', right: '4%',  floatDelay: 1.8, floatDur: 6,   smShow: false },
+  { src: '/hero1.png', size: 150, smSize: 48, top: '47%', right: '-2%', floatDelay: 1.2, floatDur: 8.5, smShow: true  },
+  { src: '/hero7.png', size: 110, smSize: 0,  top: '67%', right: '5%',  floatDelay: 0.3, floatDur: 7,   smShow: false },
+  { src: '/hero6.png', size: 125, smSize: 0,  top: '83%', right: '1%',  floatDelay: 2.2, floatDur: 6.5, smShow: false },
 ];
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
@@ -133,24 +135,40 @@ export default function HeroSection() {
         {leftDishes.map((img, i) => (
           <motion.div
             key={`l-${i}`}
-            className="dish-shell"
-            style={{ width: img.size, height: img.size, top: img.top, left: img.left }}
+            className={`dish-shell ${img.smShow ? 'block' : 'hidden md:block'}`}
+            style={{ 
+              top: img.top, 
+              left: img.left,
+              '--size': `${img.size}px`,
+              '--sm-size': `${img.smSize}px`
+            } as any}
             {...dishEnter('left', i)}
           >
-            <div className="dish-inner" style={{ animationDelay: `${img.floatDelay}s`, animationDuration: `${img.floatDur}s` }}>
-              <Image src={img.src} alt="" fill className="object-cover" />
+            {/* في الجوال يأخذ الحجم الصغير وفي الشاشات الكبيرة md يأخذ الحجم العادي */}
+            <div className="w-[var(--sm-size)] h-[var(--sm-size)] md:w-[var(--size)] md:h-[var(--size)]">
+              <div className="dish-inner" style={{ animationDelay: `${img.floatDelay}s`, animationDuration: `${img.floatDur}s` }}>
+                <Image src={img.src} alt="" fill className="object-cover" />
+              </div>
             </div>
           </motion.div>
         ))}
+
         {rightDishes.map((img, i) => (
           <motion.div
             key={`r-${i}`}
-            className="dish-shell"
-            style={{ width: img.size, height: img.size, top: img.top, right: img.right }}
+            className={`dish-shell ${img.smShow ? 'block' : 'hidden md:block'}`}
+            style={{ 
+              top: img.top, 
+              right: img.right,
+              '--size': `${img.size}px`,
+              '--sm-size': `${img.smSize}px`
+            } as any}
             {...dishEnter('right', i)}
           >
-            <div className="dish-inner" style={{ animationDelay: `${img.floatDelay}s`, animationDuration: `${img.floatDur}s` }}>
-              <Image src={img.src} alt="" fill className="object-cover" />
+            <div className="w-[var(--sm-size)] h-[var(--sm-size)] md:w-[var(--size)] md:h-[var(--size)]">
+              <div className="dish-inner" style={{ animationDelay: `${img.floatDelay}s`, animationDuration: `${img.floatDur}s` }}>
+                <Image src={img.src} alt="" fill className="object-cover" />
+              </div>
             </div>
           </motion.div>
         ))}
@@ -243,11 +261,11 @@ export default function HeroSection() {
         </motion.div>
 
         {/* phones */}
-       <motion.div
-  ref={phonesRef}
-  style={{ y: phonesY }}
-  className="relative hidden md:flex items-end justify-center gap-4 mt-10 flex-wrap"
->
+        <motion.div
+          ref={phonesRef}
+          style={{ y: phonesY }}
+          className="relative hidden md:flex items-end justify-center gap-4 mt-10 flex-wrap"
+        >
           {/* glow blob */}
           <motion.div
             className="absolute pointer-events-none"
