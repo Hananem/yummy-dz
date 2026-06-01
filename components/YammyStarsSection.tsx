@@ -8,15 +8,6 @@ export default function RewardsSection() {
       <div className="max-w-7xl mx-auto px-6">
 
         {/* Header */}
-        <div className="text-center mb-24">
-          <div className="inline-block px-4 py-2 rounded-full border border-[#34B472]/20 bg-[#34B472]/10 text-[#47DF90] text-sm mb-6">
-            نظام المكافآت
-          </div>
-          <h2 className="text-4xl md:text-6xl font-bold">Yammy Stars ⭐</h2>
-          <p className="text-gray-400 text-lg mt-6 max-w-2xl mx-auto">
-            اربح المكافآت واصعد في التصنيفات مع نظام النجوم الذكي.
-          </p>
-        </div>
 
         {/* === القسم الأول === */}
         <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-24 xl:gap-36 mb-32">
@@ -51,20 +42,17 @@ export default function RewardsSection() {
             <div className="inline-block px-3 py-1 rounded-full bg-[#36C275]/10 border border-[#36C275]/30 text-[#36C275] text-sm">
               للمستخدمين
             </div>
-            <h3 className="text-3xl md:text-5xl font-bold leading-tight">
-              اجمع النجوم واحصل على
-              <br />
-              <span className="text-[#47DF90]">مكافآت حصرية</span>
-            </h3>
-            <p className="text-gray-400 text-lg leading-relaxed">
-              قيّم المطاعم، ادعُ أصدقاءك، واجمع النجوم التي تقربك من الهدايا والتجارب الحصرية.
-            </p>
+           <h3 className="text-3xl md:text-5xl font-bold leading-tight">
+  اجمع النقاط، نقاطك = هداياك 🎁
+  <br />
+  <span className="text-[#47DF90]">واحصل على شارات مميزة 🏅</span>
+</h3>
 
             <div className="flex flex-col gap-3">
               {[
-                { icon: '⭐', title: 'تقييم المطاعم', desc: 'شاركنا رأيك واكسب نجوم لكل تقييم', badge: null, yellow: false },
-                { icon: '👥', title: 'دعوة الأصدقاء', desc: 'ادعُ أصدقاءك واحصل على نجوم إضافية', badge: '+50 نجمة', yellow: false },
-                { icon: '🎁', title: 'نشاط التطبيق', desc: 'كل تفاعل داخل التطبيق يضيف نجوماً', badge: 'يومي', yellow: true },
+                { icon: '✍️', title: 'قيّم المطاعم', desc: 'شاركنا رأيك واكسب نقاطاً لكل تقييم', badge: null, yellow: false },
+{ icon: '👥', title: 'دعوة الأصدقاء', desc: 'ادعُ أصدقاءك واحصل على نقاط إضافية', badge: '+50 نقطة', yellow: false },
+{ icon: '🏅', title: 'اجمع الشارات', desc: 'كلما تفاعلت أكثر، حصلت على شارات أعلى مستوى', badge: 'حصري', yellow: true },
               ].map((card, i) => (
                 <div key={i} className={`bg-[#1A2535] border rounded-2xl p-4 ${i === 1 ? 'border-[#36C275]/30' : 'border-white/10'}`}>
                   <div className="flex items-center gap-3">
@@ -99,14 +87,11 @@ export default function RewardsSection() {
             <div className="inline-block px-3 py-1 rounded-full bg-[#36C275]/10 border border-[#36C275]/30 text-[#36C275] text-sm">
               للمطاعم
             </div>
-            <h3 className="text-3xl md:text-5xl font-bold leading-tight">
-              ارتقِ في التصنيفات
-              <br />
-              <span className="text-[#E63946]">واحصل على شارة Yammy Stars</span>
-            </h3>
-            <p className="text-gray-400 text-lg leading-relaxed">
-              ارتقِ في التصنيفات واحصل على شارة Yammy Stars التي تعكس جودة مطعمك وثقة الزبائن.
-            </p>
+          <h3 className="text-3xl md:text-5xl font-bold leading-tight">
+  اجمع النجوم وارتقِ في التصنيفات
+  <br />
+  <span className="text-[#E63946]">واحصل على شارة Yammy Stars ⭐</span>
+</h3>
 
             <div className="flex flex-col gap-3">
               <div className="bg-[#1A2535] border border-white/10 rounded-2xl p-4">
