@@ -33,33 +33,27 @@ export default function BannerSection() {
               اكتشف أفضل المطاعم، قيّم الأطباق، واحصل على مكافآت حقيقية مع كل تجربة.
             </p>
 
-            <div className="flex flex-wrap gap-4">
-
-              {/* App Store */}
-              <a
-                href="#"
-                className="flex items-center gap-3 bg-black text-white px-6 py-4 rounded-2xl hover:bg-black/80 transition-all duration-300 hover:scale-105"
-              >
-                <Download size={20} />
-                <div className="text-right">
-                  <p className="text-xs text-white/70">تحميل من</p>
-                  <p className="text-sm font-bold">App Store</p>
-                </div>
-              </a>
-
-              {/* Google Play */}
-              <a
-                href="#"
-                className="flex items-center gap-3 bg-black text-white px-6 py-4 rounded-2xl hover:bg-black/80 transition-all duration-300 hover:scale-105"
-              >
-                <Download size={20} />
-                <div className="text-right">
-                  <p className="text-xs text-white/70">تحميل من</p>
-                  <p className="text-sm font-bold">Google Play</p>
-                </div>
-              </a>
-
-            </div>
+           <div className="flex items-center gap-3">
+            <a href="#">
+              <Image
+                src="/google-play.png"
+                alt="Google Play"
+                width={180}
+                height={54}
+                className="hover:opacity-90 transition"
+              />
+            </a>
+          
+            <a href="#">
+              <Image
+                      src="/toppng.com-download-on-the-app-store-badge-vector-400x400.png"
+                      alt="App Store"
+                      width={138}
+                      height={39}
+                      className="block"
+                    />
+            </a>
+          </div>
           </div>
 
           {/* Phone Mockup */}

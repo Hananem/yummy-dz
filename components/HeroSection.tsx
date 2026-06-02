@@ -223,42 +223,86 @@ export default function HeroSection() {
         </motion.p>
 
         {/* CTA buttons */}
-        <motion.div
-          className="flex flex-wrap items-center justify-center gap-3 mt-6"
-          initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
-          variants={{
-            hidden: {},
-            visible: { transition: { staggerChildren: 0.1, delayChildren: 1.2 } },
-          }}
-        >
-          {[
-            { label: 'تحميل من Google Play', cls: 'bg-[#36C275] shadow-[0_8px_32px_rgba(54,194,117,0.35)]' },
-            { label: 'App Store',             cls: 'bg-white text-black' },
-            { label: 'سجل مطعمك الآن',       cls: 'border border-[#F04D43] text-[#F04D43]' },
-          ].map((btn, i) => (
-            <motion.button
-              key={i}
-              className={`${btn.cls} px-7 py-3 rounded-2xl font-semibold text-sm tracking-wide transition-all`}
-              variants={{
-                hidden: { opacity: 0, scale: 0.75, y: 16 },
-                visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.65, ease: EASE } },
-              }}
-              whileHover={{
-                scale: 1.07, y: -4,
-                boxShadow: i === 0
-                  ? '0 16px 40px rgba(54,194,117,0.45)'
-                  : i === 2
-                    ? '0 8px 24px rgba(240,77,67,0.3)'
-                    : '0 8px 24px rgba(255,255,255,0.15)',
-                transition: { type: 'spring', stiffness: 360, damping: 20 },
-              }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {btn.label}
-            </motion.button>
-          ))}
-        </motion.div>
+      <motion.div
+  className="flex flex-wrap items-center justify-center gap-3 mt-6"
+  initial="hidden"
+  animate={isInView ? 'visible' : 'hidden'}
+  variants={{
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.1, delayChildren: 1.2 } },
+  }}
+>
+
+  {/* Google Play */}
+  <motion.a
+    href="#"
+    variants={{
+      hidden: { opacity: 0, scale: 0.75, y: 16 },
+      visible: {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        transition: { duration: 0.65, ease: EASE },
+      },
+    }}
+    whileHover={{ scale: 1.07, y: -4 }}
+    whileTap={{ scale: 0.95 }}
+  >
+    <Image
+      src="/google-play.png"
+      alt="Google Play"
+      width={180}
+      height={54}
+    />
+  </motion.a>
+
+  {/* App Store */}
+  <motion.a
+    href="#"
+    variants={{
+      hidden: { opacity: 0, scale: 0.75, y: 16 },
+      visible: {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        transition: { duration: 0.65, ease: EASE },
+      },
+    }}
+    whileHover={{ scale: 1.07, y: -4 }}
+    whileTap={{ scale: 0.95 }}
+  >
+   <Image
+         src="/toppng.com-download-on-the-app-store-badge-vector-400x400.png"
+         alt="App Store"
+         width={138}
+         height={39}
+         className="block"
+       />
+  </motion.a>
+
+  {/* سجل مطعمك الآن */}
+  <motion.button
+    className="border border-[#F04D43] text-[#F04D43] px-7 py-3 rounded-2xl font-semibold text-sm tracking-wide"
+    variants={{
+      hidden: { opacity: 0, scale: 0.75, y: 16 },
+      visible: {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        transition: { duration: 0.65, ease: EASE },
+      },
+    }}
+    whileHover={{
+      scale: 1.07,
+      y: -4,
+      boxShadow: '0 8px 24px rgba(240,77,67,0.3)',
+    }}
+    whileTap={{ scale: 0.95 }}
+  >
+    سجل مطعمك الآن
+  </motion.button>
+
+</motion.div>
 
         {/* phones */}
         <motion.div
