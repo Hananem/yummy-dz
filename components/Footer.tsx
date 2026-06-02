@@ -84,10 +84,15 @@ export default function Footer() {
       <div className="border-t border-white/5 py-6">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
 
-          <div className="text-gray-400 text-sm">
-            contact@yammydz.com
-          </div>
+        <div className="flex flex-col items-center md:items-start text-gray-400 text-sm gap-1">
+  <a href="mailto:contact@yammydz.com" className="hover:text-white">
+    support@yammy-dz.com
+  </a>
 
+  <a href="tel:+213555555555" className="hover:text-white">
+   0671 89 82 35
+  </a>
+</div>
          {/* 
   <div className="flex gap-4 text-gray-400 text-sm">
     <a href="#" className="hover:text-white">Instagram</a>
