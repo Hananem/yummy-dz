@@ -10,19 +10,19 @@ import {
 import { useRef } from 'react';
 
 const leftDishes = [
-  { src: '/hero1.png', size: 130, smSize: 45, top: '8%',  left: '0%',  floatDelay: 0,   floatDur: 6,   smShow: true  },
-  { src: '/hero2.png', size: 110, smSize: 0,  top: '27%', left: '4%',  floatDelay: 1.5, floatDur: 7,   smShow: false },
-  { src: '/hero3.png', size: 155, smSize: 55, top: '50%', left: '-2%', floatDelay: 0.8, floatDur: 8,   smShow: true  },
-  { src: '/hero4.png', size: 120, smSize: 0,  top: '70%', left: '6%',  floatDelay: 2,   floatDur: 6.5, smShow: false },
-  { src: '/hero5.png', size: 100, smSize: 0,  top: '86%', left: '2%',  floatDelay: 1,   floatDur: 7.5, smShow: false },
+  { src: '/hero1.webp', size: 130, smSize: 45, top: '8%',  left: '0%',  floatDelay: 0,   floatDur: 6,   smShow: true  },
+  { src: '/hero2.webp', size: 110, smSize: 0,  top: '27%', left: '4%',  floatDelay: 1.5, floatDur: 7,   smShow: false },
+  { src: '/hero3.webp', size: 155, smSize: 55, top: '50%', left: '-2%', floatDelay: 0.8, floatDur: 8,   smShow: true  },
+  { src: '/hero4.webp', size: 120, smSize: 0,  top: '70%', left: '6%',  floatDelay: 2,   floatDur: 6.5, smShow: false },
+  { src: '/hero5.webp', size: 100, smSize: 0,  top: '86%', left: '2%',  floatDelay: 1,   floatDur: 7.5, smShow: false },
 ];
 
 const rightDishes = [
-  { src: '/hero3.png', size: 140, smSize: 50, top: '6%',  right: '0%',  floatDelay: 0.5, floatDur: 7,   smShow: true  },
-  { src: '/hero5.png', size: 115, smSize: 0,  top: '24%', right: '4%',  floatDelay: 1.8, floatDur: 6,   smShow: false },
-  { src: '/hero1.png', size: 150, smSize: 48, top: '47%', right: '-2%', floatDelay: 1.2, floatDur: 8.5, smShow: true  },
-  { src: '/hero7.png', size: 110, smSize: 0,  top: '67%', right: '5%',  floatDelay: 0.3, floatDur: 7,   smShow: false },
-  { src: '/hero6.png', size: 125, smSize: 0,  top: '83%', right: '1%',  floatDelay: 2.2, floatDur: 6.5, smShow: false },
+  { src: '/hero3.webp', size: 140, smSize: 50, top: '6%',  right: '0%',  floatDelay: 0.5, floatDur: 7,   smShow: true  },
+  { src: '/hero5.webp', size: 115, smSize: 0,  top: '24%', right: '4%',  floatDelay: 1.8, floatDur: 6,   smShow: false },
+  { src: '/hero1.webp', size: 150, smSize: 48, top: '47%', right: '-2%', floatDelay: 1.2, floatDur: 8.5, smShow: true  },
+  { src: '/hero7.webp', size: 110, smSize: 0,  top: '67%', right: '5%',  floatDelay: 0.3, floatDur: 7,   smShow: false },
+  { src: '/hero6.webp', size: 125, smSize: 0,  top: '83%', right: '1%',  floatDelay: 2.2, floatDur: 6.5, smShow: false },
 ];
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
