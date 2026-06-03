@@ -1,42 +1,97 @@
+'use client';
+
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 import ServiceCard from './ServiceCard';
 
 const services = [
-  { title: 'زيادة عدد الزبائن', desc: 'اجعل مطعمك يظهر أمام آلاف المستخدمين الباحثين عن أفضل أماكن الأكل في الجزائر.' },
-  { title: 'نظام تقييم موثوق', desc: 'احصل على تقييمات حقيقية تساعدك على بناء الثقة وتحسين سمعة مطعمك.' },
-  { title: 'تصنيف Yammy Stars', desc: 'ارتقِ في التصنيفات واحصل على شارات مميزة تزيد من جاذبية مطعمك للعملاء.' },
-  { title: 'عروض وحملات تسويقية', desc: 'أنشئ عروضًا خاصة وحقق انتشارًا أكبر من خلال الحملات والإعلانات داخل التطبيق.' },
+  {
+    title: 'زيادة عدد الزبائن',
+    desc: 'اجعل مطعمك يظهر أمام آلاف المستخدمين الباحثين عن أفضل أماكن الأكل في الجزائر.',
+  },
+  {
+    title: 'نظام تقييم موثوق',
+    desc: 'احصل على تقييمات حقيقية تساعدك على بناء الثقة وتحسين سمعة مطعمك.',
+  },
+  {
+    title: 'تصنيف Yammy Stars',
+    desc: 'ارتقِ في التصنيفات واحصل على شارات مميزة تزيد من جاذبية مطعمك للعملاء.',
+  },
+  {
+    title: 'عروض وحملات تسويقية',
+    desc: 'أنشئ عروضًا خاصة وحقق انتشارًا أكبر من خلال الحملات والإعلانات داخل التطبيق.',
+  },
 ];
 
 export default function ServicesSection() {
   return (
-    <section className="py-20 bg-[#0F1720] text-white">
+    <section id="services" className="py-20 bg-[#0F1720] text-white">
       <div className="max-w-7xl mx-auto px-6">
+
+        {/* HEADER */}
         <div className="text-center mb-16">
-          <div className="inline-block px-4 py-2 rounded-full border border-[#36C275]/30 bg-[#36C275]/10 text-[#36C275] text-sm mb-4">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="inline-block px-4 py-2 rounded-full border border-[#36C275]/30 bg-[#36C275]/10 text-[#36C275] text-sm mb-4"
+          >
             لأصحاب المطاعم
-          </div>
-          <h2 className="text-5xl font-bold mb-4">لماذا تختار Yammy Dz؟</h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          </motion.div>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            viewport={{ once: true }}
+            className="text-5xl font-bold mb-4"
+          >
+            لماذا تختار Yammy Dz؟
+          </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="text-xl text-gray-400 max-w-2xl mx-auto"
+          >
             منصة متكاملة تمنح مطعمك الظهور والثقة والنمو الحقيقي
-          </p>
+          </motion.p>
         </div>
 
         <div className="flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-8">
 
-          {/* البطاقات اليسار */}
+          {/* LEFT CARDS */}
           <div className="flex flex-col gap-6 lg:w-1/4 lg:mt-24">
             {services.slice(0, 2).map((s, i) => (
-              <ServiceCard key={i} {...s} />
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: -80 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: i * 0.15 }}
+                viewport={{ once: true }}
+              >
+                <ServiceCard {...s} />
+              </motion.div>
             ))}
           </div>
 
-          {/* الهاتف - المنتصف */}
-         {/* الهاتف - المنتصف */}
-<div className="relative w-[360px] h-[480px] flex-shrink-0 hidden lg:flex items-center justify-center">
-
-            {/* الدائرة الخضراء الصلبة مع neon حولها فقط */}
-            <div
+          {/* PHONE */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="relative w-[360px] h-[480px] flex-shrink-0 hidden lg:flex items-center justify-center"
+          >
+            {/* GLOW CIRCLE */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
               className="absolute z-0"
               style={{
                 width: '260px',
@@ -48,8 +103,11 @@ export default function ServicesSection() {
               }}
             />
 
-            {/* perspective container */}
-            <div style={{ perspective: '1200px' }} className="relative z-10 w-full h-full flex items-center justify-center">
+            {/* 3D PHONE (NO CHANGE) */}
+            <div
+              style={{ perspective: '1200px' }}
+              className="relative z-10 w-full h-full flex items-center justify-center"
+            >
               <div
                 style={{
                   transform: 'rotateY(20deg) rotateX(10deg) rotateZ(-15deg)',
@@ -66,9 +124,15 @@ export default function ServicesSection() {
                     boxShadow: 'inset 0 0 0 1px #555',
                   }}
                 >
-                  <Image src="/screen3.png" alt="شاشة التطبيق" fill className="object-cover" />
+                  <Image
+                    src="/screen3.png"
+                    alt="شاشة التطبيق"
+                    fill
+                    className="object-cover"
+                  />
                   <div className="absolute top-3 left-1/2 -translate-x-1/2 w-16 h-4 bg-[#1c1c1e] rounded-full z-10" />
                 </div>
+
                 <div
                   className="absolute top-[8px] -right-[10px] bg-[#2a2a2c]"
                   style={{
@@ -80,12 +144,20 @@ export default function ServicesSection() {
                 />
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          {/* البطاقات اليمين */}
+          {/* RIGHT CARDS */}
           <div className="flex flex-col gap-6 lg:w-1/4 lg:-mt-24">
             {services.slice(2, 4).map((s, i) => (
-              <ServiceCard key={i} {...s} />
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: 80 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: i * 0.15 }}
+                viewport={{ once: true }}
+              >
+                <ServiceCard {...s} />
+              </motion.div>
             ))}
           </div>
 

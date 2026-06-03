@@ -2,102 +2,69 @@
 
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 const categories = [
   {
     images: ['/cat1.jpg'],
     alt: 'Fast Food', labelAr: 'وجبات سريعة', tag: 'فئة يامي',
     subcategories: [
-      { ar: 'برغر' },
-      { ar: 'دجاج مقلي' },
-      { ar: 'بيتزا' },
-      { ar: 'شاورما' },
-      { ar: 'ساندويتشات' },
-      { ar: 'تاكو' },
-      { ar: 'هوت دوغ' },
-      { ar: 'بطاطا مقلية' },
-      { ar: 'وجبات كومبو' },
-      { ar: 'أخرى' },
+      { ar: 'برغر' }, { ar: 'دجاج مقلي' }, { ar: 'بيتزا' }, { ar: 'شاورما' },
+      { ar: 'ساندويتشات' }, { ar: 'تاكو' }, { ar: 'هوت دوغ' }, { ar: 'بطاطا مقلية' },
+      { ar: 'وجبات كومبو' }, { ar: 'أخرى' },
     ]
   },
   {
     images: ['/cat7.jpg', '/cat8.jpg'],
     alt: 'Traditional Food', labelAr: 'أكل تقليدي', tag: 'طعم جزائري',
     subcategories: [
-      { ar: 'أكلات جزائرية' },
-      { ar: 'كسكس' },
-      { ar: 'طاجين' },
-      { ar: 'شوربات' },
-      { ar: 'مقبلات تقليدية' },
-      { ar: 'مخبوزات تقليدية' },
-      { ar: 'أطباق منزلية' },
-      { ar: 'أخرى' },
+      { ar: 'أكلات جزائرية' }, { ar: 'كسكس' }, { ar: 'طاجين' }, { ar: 'شوربات' },
+      { ar: 'مقبلات تقليدية' }, { ar: 'مخبوزات تقليدية' }, { ar: 'أطباق منزلية' }, { ar: 'أخرى' },
     ]
   },
   {
     images: ['/cat11.jpg'],
     alt: 'Seafood', labelAr: 'مأكولات بحرية', tag: 'طازج دائماً',
     subcategories: [
-      { ar: 'أسماك مشوية' },
-      { ar: 'مقليات بحرية' },
-      { ar: 'جمبري' },
-      { ar: 'محار' },
-      { ar: 'حساء بحري' },
-      { ar: 'أطباق بحرية مختلطة' },
-      { ar: 'أخرى' },
+      { ar: 'أسماك مشوية' }, { ar: 'مقليات بحرية' }, { ar: 'جمبري' }, { ar: 'محار' },
+      { ar: 'حساء بحري' }, { ar: 'أطباق بحرية مختلطة' }, { ar: 'أخرى' },
     ]
   },
   {
     images: ['/cat2.jpg', '/cat4.jpg', '/cat5.jpg', '/cat6.jpg'],
     alt: 'Desserts & Drinks', labelAr: 'حلويات ومشروبات', tag: 'لحظات حلوة',
     subcategories: [
-      { ar: 'حلويات' },
-      { ar: 'آيس كريم' },
-      { ar: 'كريب' },
-      { ar: 'وافل' },
-      { ar: 'عصائر' },
-      { ar: 'مشروبات غازية' },
-      { ar: 'سموثي' },
-      { ar: 'أخرى' },
+      { ar: 'حلويات' }, { ar: 'آيس كريم' }, { ar: 'كريب' }, { ar: 'وافل' },
+      { ar: 'عصائر' }, { ar: 'مشروبات غازية' }, { ar: 'سموثي' }, { ar: 'أخرى' },
     ]
   },
   {
     images: ['/cat13.jpg'],
     alt: 'Healthy Food', labelAr: 'أكل صحي', tag: 'عيش بصحة',
     subcategories: [
-      { ar: 'سلطات' },
-      { ar: 'وجبات دايت' },
-      { ar: 'نباتي' },
-      { ar: 'فيغان' },
-      { ar: 'عصائر طبيعية' },
-      { ar: 'أطعمة منخفضة السعرات' },
-      { ar: 'أخرى' },
+      { ar: 'سلطات' }, { ar: 'وجبات دايت' }, { ar: 'نباتي' }, { ar: 'فيغان' },
+      { ar: 'عصائر طبيعية' }, { ar: 'أطعمة منخفضة السعرات' }, { ar: 'أخرى' },
     ]
   },
   {
     images: ['/cat3.jpg', '/cat14.jpg'],
     alt: 'Cafés & Tea', labelAr: 'مقاهي وشاي', tag: 'مقاهي مميزة',
     subcategories: [
-      { ar: 'قهوة' },
-      { ar: 'شاي' },
-      { ar: 'حلويات خفيفة' },
-      { ar: 'مشروبات ساخنة' },
-      { ar: 'مشروبات باردة' },
-      { ar: 'أخرى' },
+      { ar: 'قهوة' }, { ar: 'شاي' }, { ar: 'حلويات خفيفة' },
+      { ar: 'مشروبات ساخنة' }, { ar: 'مشروبات باردة' }, { ar: 'أخرى' },
     ]
   },
   {
     images: ['/cat12.jpg', '/cat10.jpg'],
     alt: 'Buffet & Events', labelAr: 'بوفيه ومناسبات', tag: 'مناسبات خاصة',
     subcategories: [
-      { ar: 'بوفيه مفتوح' },
-      { ar: 'وجبات جماعية' },
-      { ar: 'ولائم' },
-      { ar: 'خدمات مناسبات' },
-      { ar: 'تجهيز حفلات' },
+      { ar: 'بوفيه مفتوح' }, { ar: 'وجبات جماعية' }, { ar: 'ولائم' },
+      { ar: 'خدمات مناسبات' }, { ar: 'تجهيز حفلات' },
     ]
   },
 ];
+
+const viewport = { once: true, margin: '-80px' };
 
 export default function CategoriesSection() {
   const [active, setActive] = useState(0);
@@ -129,20 +96,46 @@ export default function CategoriesSection() {
 
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-block px-4 py-2 rounded-full border border-[#36C275]/30 bg-[#36C275]/10 text-[#36C275] text-sm mb-5">
+          <motion.div
+            className="inline-block px-4 py-2 rounded-full border border-[#36C275]/30 bg-[#36C275]/10 text-[#36C275] text-sm mb-5"
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={viewport}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+          >
             فئات المطاعم
-          </div>
-          <h2 className="text-4xl md:text-5xl font-bold leading-tight">
+          </motion.div>
+
+          <motion.h2
+            className="text-4xl md:text-5xl font-bold leading-tight"
+            initial={{ opacity: 0, y: -30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={viewport}
+            transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
+          >
             اكتشف مختلف أنواع
             <span className="text-[#36C275]"> المطاعم والمقاهي </span>
-          </h2>
-          <p className="text-gray-400 text-lg leading-relaxed mt-6">
+          </motion.h2>
+
+          <motion.p
+            className="text-gray-400 text-lg leading-relaxed mt-6"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={viewport}
+            transition={{ duration: 0.6, ease: 'easeOut', delay: 0.2 }}
+          >
             من الوجبات السريعة إلى المطاعم الفاخرة والمأكولات التقليدية الجزائرية.
-          </p>
+          </motion.p>
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-3 flex-wrap justify-center mb-10">
+        <motion.div
+          className="flex gap-3 flex-wrap justify-center mb-10"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={viewport}
+          transition={{ duration: 0.6, ease: 'easeOut', delay: 0.3 }}
+        >
           {categories.map((c, i) => (
             <button
               key={i}
@@ -156,11 +149,16 @@ export default function CategoriesSection() {
               {c.labelAr}
             </button>
           ))}
-        </div>
+        </motion.div>
 
         {/* Active Card */}
-        <div className="relative w-full h-[480px] md:h-[560px] rounded-[32px] overflow-hidden group cursor-pointer">
-
+        <motion.div
+          className="relative w-full h-[480px] md:h-[560px] rounded-[32px] overflow-hidden group cursor-pointer"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={viewport}
+          transition={{ duration: 0.7, ease: 'easeOut', delay: 0.4 }}
+        >
           <div className={`absolute inset-0 transition-opacity duration-500 ${fade ? 'opacity-100' : 'opacity-0'}`}>
             <Image
               key={cat.images[imgIndex]}
@@ -202,10 +200,16 @@ export default function CategoriesSection() {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Download CTA */}
-        <div className="mt-6 rounded-[32px] bg-gradient-to-br from-[#34B472] to-[#47DF90] flex items-center justify-center overflow-hidden p-8 text-center relative">
+        <motion.div
+          className="mt-6 rounded-[32px] bg-gradient-to-br from-[#34B472] to-[#47DF90] flex items-center justify-center overflow-hidden p-8 text-center relative"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={viewport}
+          transition={{ duration: 0.6, ease: 'easeOut', delay: 0.5 }}
+        >
           <div className="absolute -top-8 -right-8 w-40 h-40 bg-white/10 rounded-full blur-2xl" />
           <div className="absolute -bottom-8 -left-8 w-40 h-40 bg-white/10 rounded-full blur-2xl" />
           <div className="relative z-10">
@@ -217,7 +221,7 @@ export default function CategoriesSection() {
               تحميل التطبيق ←
             </div>
           </div>
-        </div>
+        </motion.div>
 
       </div>
     </section>

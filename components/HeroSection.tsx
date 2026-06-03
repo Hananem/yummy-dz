@@ -90,7 +90,7 @@ export default function HeroSection() {
   });
 
   return (
-    <section ref={sectionRef} className="relative w-full overflow-hidden min-h-screen">
+    <section id="hero" ref={sectionRef} className="relative w-full overflow-hidden min-h-screen">
 
       <style>{`
         @keyframes float {

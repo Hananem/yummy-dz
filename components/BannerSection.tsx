@@ -1,63 +1,122 @@
 'use client';
 
 import Image from 'next/image';
-import { Smartphone, Download } from 'lucide-react';
+import {
+  motion,
+  type Variants,
+  easeOut,
+} from 'framer-motion';
+import { Smartphone } from 'lucide-react';
+
+const container: Variants = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+};
+
+const item: Variants = {
+  hidden: { opacity: 0, y: 40 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: easeOut,
+    },
+  },
+};
+
+const phoneAnim: Variants = {
+  hidden: { opacity: 0, x: 80, rotate: -20 },
+  show: {
+    opacity: 1,
+    x: 0,
+    rotate: -12,
+    transition: {
+      duration: 0.8,
+      ease: easeOut,
+    },
+  },
+};
 
 export default function BannerSection() {
   return (
     <section className="py-24 bg-[#0F1720]" dir="rtl">
       <div className="max-w-[1500px] mx-auto px-6">
 
-        <div className="relative bg-[#36C275] rounded-3xl overflow-visible min-h-[420px] flex items-center">
+        <motion.div
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.4 }}
+          className="relative bg-[#36C275] rounded-3xl overflow-visible min-h-[420px] flex items-center"
+        >
 
-          {/* Glow Effects */}
+          {/* Glow effects */}
           <div className="absolute -top-20 -left-20 w-64 h-64 rounded-full bg-white/10 blur-3xl" />
           <div className="absolute -bottom-10 left-1/3 w-48 h-48 rounded-full bg-white/10 blur-2xl" />
 
-          {/* Content */}
+          {/* CONTENT */}
           <div className="relative z-10 flex-1 px-12 py-12">
-            <div className="flex items-center gap-2 mb-3">
+
+            <motion.div variants={item} className="flex items-center gap-2 mb-3">
               <Smartphone size={18} className="text-white/70" />
               <p className="text-white/80 text-sm font-medium">
                 متاح على Android و iOS
               </p>
-            </div>
+            </motion.div>
 
-            <h2 className="text-4xl md:text-6xl font-bold text-white leading-tight mb-6">
+            <motion.h2
+              variants={item}
+              className="text-4xl md:text-6xl font-bold text-white leading-tight mb-6"
+            >
               حمّل Yammy الآن
               <br />
               وابدأ رحلتك الغذائية
-            </h2>
+            </motion.h2>
 
-            <p className="text-white/80 text-lg md:text-xl mb-8 max-w-lg">
+            <motion.p
+              variants={item}
+              className="text-white/80 text-lg md:text-xl mb-8 max-w-lg"
+            >
               اكتشف أفضل المطاعم، قيّم الأطباق، واحصل على مكافآت حقيقية مع كل تجربة.
-            </p>
+            </motion.p>
 
-           <div className="flex items-center gap-3">
-            <a href="#">
-              <Image
-                src="/google-play.png"
-                alt="Google Play"
-                width={180}
-                height={54}
-                className="hover:opacity-90 transition"
-              />
-            </a>
-          
-            <a href="#">
-              <Image
-                      src="/toppng.com-download-on-the-app-store-badge-vector-400x400.png"
-                      alt="App Store"
-                      width={138}
-                      height={39}
-                      className="block"
-                    />
-            </a>
-          </div>
+            <motion.div variants={item} className="flex items-center gap-3">
+              <a href="#">
+                <Image
+                  src="/google-play.png"
+                  alt="Google Play"
+                  width={180}
+                  height={54}
+                  className="hover:opacity-90 transition"
+                />
+              </a>
+
+              <a href="#">
+                <Image
+                  src="/toppng.com-download-on-the-app-store-badge-vector-400x400.png"
+                  alt="App Store"
+                  width={138}
+                  height={39}
+                  className="block"
+                />
+              </a>
+            </motion.div>
+
           </div>
 
-          {/* Phone Mockup */}
-          <div className="relative z-20 flex-shrink-0 px-16 hidden md:block">
+          {/* PHONE */}
+          <motion.div
+            variants={phoneAnim}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.4 }}
+            className="relative z-20 flex-shrink-0 px-16 hidden md:block"
+          >
             <div
               className="
                 relative
@@ -86,12 +145,11 @@ export default function BannerSection() {
                 priority
               />
 
-              {/* Notch */}
               <div className="absolute top-3 left-1/2 -translate-x-1/2 w-24 h-5 bg-[#1a1a2e] rounded-full z-10" />
             </div>
-          </div>
+          </motion.div>
 
-        </div>
+        </motion.div>
       </div>
     </section>
   );

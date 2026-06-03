@@ -1,3 +1,7 @@
+'use client';
+
+import { motion } from 'framer-motion';
+
 const steps = [
   {
     number: '01',
@@ -25,35 +29,67 @@ const steps = [
 export default function HowItWorksSection() {
   return (
     <section
+      id="how-it-works"
       className="py-32 px-6 bg-[#0F1720] text-white overflow-hidden"
       dir="rtl"
     >
-     <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-start">
-
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-start">
         {/* النص */}
         <div className="lg:sticky top-32 text-right">
-          <div className="inline-block px-4 py-2 rounded-full border border-white/10 bg-white/5 text-white text-sm mb-6">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="inline-block px-4 py-2 rounded-full border border-white/10 bg-white/5 text-white text-sm mb-6"
+          >
             كيف يعمل التطبيق؟
-          </div>
+          </motion.div>
 
-          <h2 className="text-4xl md:text-5xl font-bold leading-tight">
+          <motion.h2
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            viewport={{ once: true }}
+            className="text-4xl md:text-5xl font-bold leading-tight"
+          >
             اكتشف، قيّم،
             <span className="bg-gradient-to-r from-[#34B472] to-[#47DF90] bg-clip-text text-transparent">
-              {' '}واربح بسهولة
+              {' '}
+              واربح بسهولة
             </span>
-          </h2>
+          </motion.h2>
 
-          <p className="text-gray-400 text-lg leading-relaxed mt-8 max-w-xl">
+          <motion.p
+            initial={{ opacity: 0, x: 80 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.25 }}
+            viewport={{ once: true }}
+            className="text-gray-400 text-lg leading-relaxed mt-8 max-w-xl"
+          >
             Yammy Dz يمنحك تجربة حديثة لاكتشاف أفضل المطاعم والمقاهي
             في الجزائر مع نظام نقاط ومكافآت حقيقي داخل تطبيق واحد.
-          </p>
+          </motion.p>
         </div>
 
         {/* البطاقات */}
         <div className="flex flex-col gap-6 lg:gap-10 mt-10 lg:mt-20">
           {steps.map((step, i) => (
-            <div
+            <motion.div
               key={i}
+             initial={{
+  opacity: 0,
+  y: 80,
+}}
+whileInView={{
+  opacity: 1,
+  y: 0,
+}}
+              transition={{
+                duration: 0.8,
+                delay: i * 0.2,
+              }}
+              viewport={{ once: true, amount: 0.3 }}
               className={`${step.rotate} ${step.hover} transition duration-300`}
             >
               <div
@@ -64,7 +100,6 @@ export default function HowItWorksSection() {
                 }`}
               >
                 <div className="flex items-center gap-5 flex-row-reverse">
-
                   {/* الرقم */}
                   <div
                     className={`w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-bold flex-shrink-0 ${
@@ -84,21 +119,17 @@ export default function HowItWorksSection() {
 
                     <p
                       className={`leading-relaxed ${
-                        i === 1
-                          ? 'text-white/90'
-                          : 'text-gray-400'
+                        i === 1 ? 'text-white/90' : 'text-gray-400'
                       }`}
                     >
                       {step.desc}
                     </p>
                   </div>
-
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
-
       </div>
     </section>
   );

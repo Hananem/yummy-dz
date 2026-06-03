@@ -3,7 +3,12 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import {
+  motion,
+  AnimatePresence,
+  easeOut,
+  type Variants,
+} from 'framer-motion';
 
 const screenshots = [
   '/screenshots1.png',
@@ -14,18 +19,40 @@ const screenshots = [
   '/screenshots8.png',
   '/screenshots4.png',
   '/screenshots5.png',
-   '/screenshots7.png',
+  '/screenshots7.png',
   '/screenshots8.png',
   '/screenshots4.png',
   '/screenshots5.png',
 ];
 
+const container: Variants = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.08,
+    },
+  },
+};
+
+const item: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 60,
+  },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: easeOut,
+    },
+  },
+};
+
 export default function ScreenshotsSection() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  // mobile slider index
   const [mobileIndex, setMobileIndex] = useState(0);
 
   const VISIBLE = 4;
@@ -47,7 +74,6 @@ export default function ScreenshotsSection() {
     );
   };
 
-  // mobile arrows control
   const nextMobile = () => {
     setMobileIndex((p) =>
       p + VISIBLE >= screenshots.length ? 0 : p + 1
@@ -68,15 +94,30 @@ export default function ScreenshotsSection() {
   return (
     <section className="py-20 bg-[#0F1720] overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
-        <h2 className="text-4xl font-bold text-white text-center mb-12">
+
+        {/* TITLE */}
+        <motion.h2
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="text-4xl font-bold text-white text-center mb-12"
+        >
           لمحة من التطبيق
-        </h2>
+        </motion.h2>
 
         {/* ================= DESKTOP ================= */}
-        <div className="hidden md:flex gap-3 justify-center pb-8">
+        <motion.div
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          className="hidden md:flex gap-3 justify-center pb-8"
+        >
           {screenshots.map((src, index) => (
-            <div
+            <motion.div
               key={index}
+              variants={item}
               onClick={() => openModal(index)}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
@@ -87,14 +128,18 @@ export default function ScreenshotsSection() {
               }}
             >
               <Image src={src} alt="" fill className="object-cover" />
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        {/* ================= MOBILE (ARROWS ONLY) ================= */}
-        <div className="md:hidden relative flex items-center justify-center gap-2">
-          
-          {/* left arrow */}
+        {/* ================= MOBILE ================= */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="md:hidden relative flex items-center justify-center gap-2"
+        >
           <button
             onClick={prevMobile}
             className="z-10 bg-black/40 text-white p-2 rounded-full"
@@ -102,7 +147,6 @@ export default function ScreenshotsSection() {
             <ChevronLeft />
           </button>
 
-          {/* 4 images */}
           <div className="flex gap-2">
             {mobileVisible.map((src, index) => (
               <div
@@ -115,14 +159,14 @@ export default function ScreenshotsSection() {
             ))}
           </div>
 
-          {/* right arrow */}
           <button
             onClick={nextMobile}
             className="z-10 bg-black/40 text-white p-2 rounded-full"
           >
             <ChevronRight />
           </button>
-        </div>
+        </motion.div>
+
       </div>
 
       {/* ================= MODAL ================= */}
@@ -140,7 +184,6 @@ export default function ScreenshotsSection() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
             >
-              {/* close */}
               <button
                 onClick={closeModal}
                 className="absolute top-3 right-3 text-white/70 hover:text-white"
@@ -148,7 +191,6 @@ export default function ScreenshotsSection() {
                 <X size={22} />
               </button>
 
-              {/* image */}
               <div className="relative w-full h-[600px] rounded-2xl overflow-hidden">
                 <AnimatePresence mode="wait">
                   <motion.div
@@ -157,6 +199,7 @@ export default function ScreenshotsSection() {
                     initial={{ x: 80, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     exit={{ x: -80, opacity: 0 }}
+                    transition={{ duration: 0.4 }}
                   >
                     <Image
                       src={screenshots[currentIndex]}
@@ -168,7 +211,6 @@ export default function ScreenshotsSection() {
                 </AnimatePresence>
               </div>
 
-              {/* controls */}
               <div className="flex justify-between mt-4">
                 <button onClick={prevModal}>
                   <ChevronLeft className="text-white/70" />

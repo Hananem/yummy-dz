@@ -1,7 +1,8 @@
 'use client';
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { useRef } from 'react';
 
 const rewards = [
   { name: 'دراجة هوائية', image: '/gift1.jpg' },
@@ -38,7 +39,11 @@ const emojiVariants = {
 
 export default function RewardsSection() {
   const [active, setActive] = useState(6);
-
+const sectionRef = useRef(null);
+const isInView = useInView(sectionRef, {
+  once: true,
+  amount: 0.2,
+});
   const prev = () => setActive((p) => (p - 1 + rewards.length) % rewards.length);
   const next = () => setActive((p) => (p + 1) % rewards.length);
 
