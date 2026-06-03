@@ -178,10 +178,11 @@ const isInView = useInView(sectionRef, {
 
         <div className="flex justify-center gap-6 mt-4">
           <button onClick={prev} className="w-14 h-14 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 flex items-center justify-center transition-colors">
-            <ChevronLeft size={26} />
+            <ChevronRight size={26} />
           </button>
           <button onClick={next} className="w-14 h-14 rounded-full bg-gradient-to-r from-[#34B472] to-[#47DF90] flex items-center justify-center hover:opacity-90 transition-opacity">
-            <ChevronRight size={26} />
+             <ChevronLeft size={26} />
+           
           </button>
         </div>
       </div>

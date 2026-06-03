@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
-
+import Image from 'next/image';
 const testimonials = [
   {
     name: 'أمين بوزيد',
@@ -142,15 +142,21 @@ export default function TestimonialsSection() {
                 <div className="h-px bg-white/6" />
 
                 <div className="flex items-center gap-3">
-                  <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center text-lg flex-shrink-0 ${
-                      isCenter
-                        ? 'bg-[#36C275]/20 border border-[#36C275]/30'
-                        : 'bg-white/5 border border-white/10'
-                    }`}
-                  >
-                    {t.avatar}
-                  </div>
+                <div
+  className={`w-10 h-10 rounded-full flex-shrink-0 overflow-hidden ${
+    isCenter
+      ? 'border border-[#36C275]/30'
+      : 'border border-white/10'
+  }`}
+>
+  <Image
+    src="/profile.webp"
+    alt={t.name}
+    width={40}
+    height={40}
+    className="w-full h-full object-cover"
+  />
+</div>
                   <div className="text-right">
                     <p className="font-bold text-sm">{t.name}</p>
                     <p className="text-gray-500 text-xs">

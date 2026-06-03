@@ -89,9 +89,13 @@ export default function Footer() {
     support@yammy-dz.com
   </a>
 
-  <a href="  0671 89 82 35" className="hover:text-white">
-   0671 89 82 35
-  </a>
+ <a
+  href="tel:+213671898235"
+  dir="ltr"
+  className="hover:text-white"
+>
+  0671 89 82 35
+</a>
 </div>
          {/* 
   <div className="flex gap-4 text-gray-400 text-sm">
