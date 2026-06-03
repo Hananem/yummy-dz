@@ -140,6 +140,7 @@ export default function CategoriesSection() {
             <button
               key={i}
               onClick={() => setActive(i)}
+              aria-label={`عرض فئة ${c.labelAr}`}
               className={`px-5 py-2.5 rounded-full text-sm font-medium border transition-all duration-300 ${
                 active === i
                   ? 'bg-[#36C275] border-[#36C275] text-white'
@@ -177,6 +178,7 @@ export default function CategoriesSection() {
               {cat.images.map((_, i) => (
                 <button
                   key={i}
+                  aria-label={`عرض الصورة ${i + 1}`}
                   onClick={() => { setFade(false); setTimeout(() => { setImgIndex(i); setFade(true); }, 400); }}
                   className={`h-2 rounded-full transition-all duration-300 ${i === imgIndex ? 'bg-white w-5' : 'bg-white/40 w-2'}`}
                 />
@@ -217,9 +219,13 @@ export default function CategoriesSection() {
             <p className="text-white/80 text-sm leading-relaxed max-w-[240px] mx-auto">
               استكشف باقي المطاعم والأصناف المتوفرة في منطقتك
             </p>
-            <div className="mt-4 inline-block px-5 py-2 rounded-full bg-black/20 border border-white/20 text-white text-sm font-medium hover:bg-black/30 transition-all cursor-pointer">
+           <a 
+             href="#"
+              aria-label="تحميل تطبيق Yammy Dz"
+              className="mt-4 inline-block px-5 py-2 rounded-full bg-black/20 border border-white/20 text-white text-sm font-medium hover:bg-black/30 transition-all cursor-pointer"
+            >
               تحميل التطبيق ←
-            </div>
+            </a>
           </div>
         </motion.div>
 

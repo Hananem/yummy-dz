@@ -45,7 +45,7 @@ export default function AboutSection() {
             Yammy Dz ليس مجرد تطبيق مطاعم عادي، بل منصة متكاملة تساعدك على
             اكتشاف أفضل المطاعم والمقاهي في الجزائر، تقييم تجاربك، وجمع نقاط
             ومكافآت حقيقية عبر نظام
-            <span className="text-[#E6B325] font-semibold"> Yammy Stars ⭐</span>.
+            <span className="text-[#E6B325] font-semibold" lang="en"> Yammy Stars ⭐</span>.
           </motion.p>
 
           <motion.p
@@ -86,7 +86,7 @@ export default function AboutSection() {
 >
   <Image
     src="/screen1.png"
-    alt="Yammy App"
+    alt="شاشة اكتشاف المطاعم في تطبيق Yammy Dz"
     width={200}
     height={400}
     className="rounded-[28px] shadow-2xl border border-white/10"
@@ -104,7 +104,7 @@ export default function AboutSection() {
 >
   <Image
     src="/screen2.png"
-    alt="Yammy Rewards"
+    alt="شاشة نقاط المكافآت في تطبيق Yammy Dz" 
     width={160}
     height={320}
     className="rounded-[22px] shadow-2xl border border-white/10"

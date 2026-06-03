@@ -9,8 +9,6 @@ import {
 } from 'framer-motion';
 import { useRef } from 'react';
 
-// المصفوفات تحتوي على 5 صور كاملة للشاشات الكبيرة
-// تم ضبط smShow لتظهر صورتان فقط على الجوال وتم تصغير smSize لهما
 const leftDishes = [
   { src: '/hero1.png', size: 130, smSize: 45, top: '8%',  left: '0%',  floatDelay: 0,   floatDur: 6,   smShow: true  },
   { src: '/hero2.png', size: 110, smSize: 0,  top: '27%', left: '4%',  floatDelay: 1.5, floatDur: 7,   smShow: false },
@@ -136,18 +134,18 @@ export default function HeroSection() {
           <motion.div
             key={`l-${i}`}
             className={`dish-shell ${img.smShow ? 'block' : 'hidden md:block'}`}
-            style={{ 
-              top: img.top, 
+            style={{
+              top: img.top,
               left: img.left,
               '--size': `${img.size}px`,
               '--sm-size': `${img.smSize}px`
             } as any}
             {...dishEnter('left', i)}
           >
-            {/* في الجوال يأخذ الحجم الصغير وفي الشاشات الكبيرة md يأخذ الحجم العادي */}
             <div className="w-[var(--sm-size)] h-[var(--sm-size)] md:w-[var(--size)] md:h-[var(--size)]">
               <div className="dish-inner" style={{ animationDelay: `${img.floatDelay}s`, animationDuration: `${img.floatDur}s` }}>
-                <Image src={img.src} alt="" fill className="object-cover" />
+                {/* ✅ alt واضح */}
+                <Image src={img.src} alt="طبق جزائري شهي" fill className="object-cover" />
               </div>
             </div>
           </motion.div>
@@ -157,8 +155,8 @@ export default function HeroSection() {
           <motion.div
             key={`r-${i}`}
             className={`dish-shell ${img.smShow ? 'block' : 'hidden md:block'}`}
-            style={{ 
-              top: img.top, 
+            style={{
+              top: img.top,
               right: img.right,
               '--size': `${img.size}px`,
               '--sm-size': `${img.smSize}px`
@@ -167,7 +165,8 @@ export default function HeroSection() {
           >
             <div className="w-[var(--sm-size)] h-[var(--sm-size)] md:w-[var(--size)] md:h-[var(--size)]">
               <div className="dish-inner" style={{ animationDelay: `${img.floatDelay}s`, animationDuration: `${img.floatDur}s` }}>
-                <Image src={img.src} alt="" fill className="object-cover" />
+                {/* ✅ alt واضح */}
+                <Image src={img.src} alt="طبق جزائري شهي" fill className="object-cover" />
               </div>
             </div>
           </motion.div>
@@ -223,86 +222,66 @@ export default function HeroSection() {
         </motion.p>
 
         {/* CTA buttons */}
-      <motion.div
-  className="flex flex-wrap items-center justify-center gap-3 mt-6"
-  initial="hidden"
-  animate={isInView ? 'visible' : 'hidden'}
-  variants={{
-    hidden: {},
-    visible: { transition: { staggerChildren: 0.1, delayChildren: 1.2 } },
-  }}
->
+        <motion.div
+          className="flex flex-wrap items-center justify-center gap-3 mt-6"
+          initial="hidden"
+          animate={isInView ? 'visible' : 'hidden'}
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.1, delayChildren: 1.2 } },
+          }}
+        >
 
-  {/* Google Play */}
-  <motion.a
-    href="#"
-    variants={{
-      hidden: { opacity: 0, scale: 0.75, y: 16 },
-      visible: {
-        opacity: 1,
-        scale: 1,
-        y: 0,
-        transition: { duration: 0.65, ease: EASE },
-      },
-    }}
-    whileHover={{ scale: 1.07, y: -4 }}
-    whileTap={{ scale: 0.95 }}
-  >
-    <Image
-      src="/google-play.png"
-      alt="Google Play"
-      width={180}
-      height={54}
-    />
-  </motion.a>
+          {/* ✅ Google Play */}
+          <motion.a
+            href="#"
+            aria-label="حمل تطبيق Yammy Dz من Google Play"
+            variants={{
+              hidden: { opacity: 0, scale: 0.75, y: 16 },
+              visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.65, ease: EASE } },
+            }}
+            whileHover={{ scale: 1.07, y: -4 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Image src="/google-play.png" alt="تحميل من Google Play" width={180} height={54} />
+          </motion.a>
 
-  {/* App Store */}
-  <motion.a
-    href="#"
-    variants={{
-      hidden: { opacity: 0, scale: 0.75, y: 16 },
-      visible: {
-        opacity: 1,
-        scale: 1,
-        y: 0,
-        transition: { duration: 0.65, ease: EASE },
-      },
-    }}
-    whileHover={{ scale: 1.07, y: -4 }}
-    whileTap={{ scale: 0.95 }}
-  >
-   <Image
-         src="/toppng.com-download-on-the-app-store-badge-vector-400x400.png"
-         alt="App Store"
-         width={138}
-         height={39}
-         className="block"
-       />
-  </motion.a>
+          {/* ✅ App Store */}
+          <motion.a
+            href="#"
+            aria-label="حمل تطبيق Yammy Dz من App Store"
+            variants={{
+              hidden: { opacity: 0, scale: 0.75, y: 16 },
+              visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.65, ease: EASE } },
+            }}
+            whileHover={{ scale: 1.07, y: -4 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Image
+              src="/toppng.com-download-on-the-app-store-badge-vector-400x400.png"
+              alt="تحميل من App Store"
+              width={138}
+              height={39}
+              className="block"
+            />
+          </motion.a>
 
-  {/* سجل مطعمك الآن */}
-  <motion.button
-    className="border border-[#F04D43] text-[#F04D43] px-7 py-3 rounded-2xl font-semibold text-sm tracking-wide"
-    variants={{
-      hidden: { opacity: 0, scale: 0.75, y: 16 },
-      visible: {
-        opacity: 1,
-        scale: 1,
-        y: 0,
-        transition: { duration: 0.65, ease: EASE },
-      },
-    }}
-    whileHover={{
-      scale: 1.07,
-      y: -4,
-      boxShadow: '0 8px 24px rgba(240,77,67,0.3)',
-    }}
-    whileTap={{ scale: 0.95 }}
-  >
-    سجل مطعمك الآن
-  </motion.button>
+          {/* ✅ سجل مطعمك */}
+          <motion.a
+            href="/register"
+            aria-label="سجل مطعمك الآن في تطبيق Yammy Dz"
+            className="border border-[#F04D43] text-[#F04D43] px-7 py-3 rounded-2xl font-semibold text-sm tracking-wide"
+            variants={{
+              hidden: { opacity: 0, scale: 0.75, y: 16 },
+              visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.65, ease: EASE } },
+            }}
+            whileHover={{ scale: 1.07, y: -4, boxShadow: '0 8px 24px rgba(240,77,67,0.3)' }}
+            whileTap={{ scale: 0.95 }}
+          >
+            سجل مطعمك الآن
+          </motion.a>
 
-</motion.div>
+        </motion.div>
 
         {/* phones */}
         <motion.div
@@ -335,7 +314,8 @@ export default function HeroSection() {
             whileHover={{ y: -14, rotate: -7, transition: { type: 'spring', stiffness: 280, damping: 22 } }}
             style={{ cursor: 'pointer', transformOrigin: 'bottom center' }}
           >
-            <Image src="/screen1.png" alt="Yammy Screen 1" width={200} height={400} className="rounded-[28px] shadow-2xl border border-white/10" />
+            {/* ✅ alt واضح */}
+            <Image src="/screen1.png" alt="شاشة اكتشاف المطاعم في Yammy Dz" width={200} height={400} className="rounded-[28px] shadow-2xl border border-white/10" />
             <div className="absolute inset-0 rounded-[28px] pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.07) 0%, transparent 50%)' }} />
           </motion.div>
 
@@ -348,7 +328,8 @@ export default function HeroSection() {
             whileHover={{ y: -18, scale: 1.04, transition: { type: 'spring', stiffness: 280, damping: 22 } }}
             style={{ cursor: 'pointer' }}
           >
-            <Image src="/screen2.png" alt="Yammy Screen 2" width={230} height={460} className="rounded-[34px] shadow-[0_32px_80px_rgba(0,0,0,0.7)] border border-white/10" />
+            {/* ✅ alt واضح */}
+            <Image src="/screen2.png" alt="شاشة نقاط Yammy Stars" width={230} height={460} className="rounded-[34px] shadow-[0_32px_80px_rgba(0,0,0,0.7)] border border-white/10" />
             <div className="absolute inset-0 rounded-[34px] pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 50%)' }} />
             <motion.div
               className="absolute -top-5 right-4 bg-[#E6B325] text-black px-4 py-2 rounded-full text-sm font-black shadow-xl shadow-[#E6B325]/30"
@@ -369,7 +350,8 @@ export default function HeroSection() {
             whileHover={{ y: -14, rotate: 7, transition: { type: 'spring', stiffness: 280, damping: 22 } }}
             style={{ cursor: 'pointer', transformOrigin: 'bottom center' }}
           >
-            <Image src="/screen3.png" alt="Yammy Screen 3" width={200} height={400} className="rounded-[28px] shadow-2xl border border-white/10" />
+            {/* ✅ alt واضح */}
+            <Image src="/screen3.png" alt="شاشة الهدايا والمكافآت في Yammy Dz" width={200} height={400} className="rounded-[28px] shadow-2xl border border-white/10" />
             <div className="absolute inset-0 rounded-[28px] pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.07) 0%, transparent 50%)' }} />
           </motion.div>
         </motion.div>
