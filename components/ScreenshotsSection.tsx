@@ -127,7 +127,13 @@ export default function ScreenshotsSection() {
                 height: '500px',
               }}
             >
-              <Image src={src} alt="" fill className="object-cover" />
+              {/* ✅ alt واضح */}
+              <Image
+                src={src}
+                alt={`لقطة شاشة من تطبيق Yammy Dz ${index + 1}`}
+                fill
+                className="object-cover"
+              />
             </motion.div>
           ))}
         </motion.div>
@@ -140,8 +146,10 @@ export default function ScreenshotsSection() {
           viewport={{ once: true }}
           className="md:hidden relative flex items-center justify-center gap-2"
         >
+          {/* ✅ aria-label */}
           <button
             onClick={prevMobile}
+            aria-label="الصورة السابقة"
             className="z-10 bg-black/40 text-white p-2 rounded-full"
           >
             <ChevronLeft />
@@ -154,13 +162,21 @@ export default function ScreenshotsSection() {
                 onClick={() => openModal(index + mobileIndex)}
                 className="relative w-[70px] h-[260px] rounded-xl overflow-hidden shadow-lg cursor-pointer"
               >
-                <Image src={src} alt="" fill className="object-cover" />
+                {/* ✅ alt واضح */}
+                <Image
+                  src={src}
+                  alt={`لقطة شاشة من تطبيق Yammy Dz ${index + mobileIndex + 1}`}
+                  fill
+                  className="object-cover"
+                />
               </div>
             ))}
           </div>
 
+          {/* ✅ aria-label */}
           <button
             onClick={nextMobile}
+            aria-label="الصورة التالية"
             className="z-10 bg-black/40 text-white p-2 rounded-full"
           >
             <ChevronRight />
@@ -184,8 +200,10 @@ export default function ScreenshotsSection() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
             >
+              {/* ✅ aria-label */}
               <button
                 onClick={closeModal}
+                aria-label="إغلاق"
                 className="absolute top-3 right-3 text-white/70 hover:text-white"
               >
                 <X size={22} />
@@ -201,9 +219,10 @@ export default function ScreenshotsSection() {
                     exit={{ x: -80, opacity: 0 }}
                     transition={{ duration: 0.4 }}
                   >
+                    {/* ✅ alt واضح */}
                     <Image
                       src={screenshots[currentIndex]}
-                      alt=""
+                      alt={`لقطة شاشة من تطبيق Yammy Dz ${currentIndex + 1}`}
                       fill
                       className="object-cover"
                     />
@@ -212,7 +231,8 @@ export default function ScreenshotsSection() {
               </div>
 
               <div className="flex justify-between mt-4">
-                <button onClick={prevModal}>
+                {/* ✅ aria-label */}
+                <button onClick={prevModal} aria-label="الصورة السابقة">
                   <ChevronLeft className="text-white/70" />
                 </button>
 
@@ -220,7 +240,8 @@ export default function ScreenshotsSection() {
                   {currentIndex + 1} / {screenshots.length}
                 </div>
 
-                <button onClick={nextModal}>
+                {/* ✅ aria-label */}
+                <button onClick={nextModal} aria-label="الصورة التالية">
                   <ChevronRight className="text-white/70" />
                 </button>
               </div>
